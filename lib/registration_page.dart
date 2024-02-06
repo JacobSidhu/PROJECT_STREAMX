@@ -616,3 +616,81 @@ Widget codeRequestForm(
                     fontColor: FormComponents.kInstructionTextColor)))
       ]);
 }
+
+/// Functions contains the functionality to verify the user by validating requested
+/// code to proceed for updating password.This function also allow user to regenerate or resend
+/// code if user won't receive validation code because of numerious techniqual reasons.
+///
+/// Parameters:
+/// [backButtonOnPressed] - This function required to Invoke action on press nav back button.
+/// [verifyButtonOnPressed] - Requires the action/function to be called on pressing verify button.
+/// [resendButtonOnPressed] - Function that generate verification code if user dosent code any.
+Widget codeVerificationForm({
+  required Function() backButtonOnPressed,
+  required Function() verifyButtonOnPressed,
+  required Function() resendButtonOnPressed,
+}) {
+  //These constants are used to design or set constant values in the Code varification form
+  const String kFormHeading = 'Verify Code'; //Heading of the form
+  //This is directional Instructions to help getting code
+  const String kDirectionText =
+      "A verification code is been sent your Email please check and enter that code to verify your identity.";
+  const Icon kSuffixIcon =
+      Icon(Icons.key); // verify code textField Suffic Icon.
+  // Returing custom form container scaffold.
+  return FormComponents.formContainer(
+      // Adding a back Navigation button.
+      topNavBar: FormComponents.backButton(
+          // Calling back navigation on press function.
+          onPressed: backButtonOnPressed()),
+      // Content body of the code validation form/page.
+      body: [
+        // Creating Heading of the form with Slide Up Animation.
+        SlideInDown(
+            child: FormComponents.headingText(formHeading: kFormHeading)),
+        //Creating a TextField for code Submission
+        SlideInLeft(
+          // Containing textfield into fixed margin.
+          child: FormComponents.verticalMargin(
+              child: Custom.textfieldBuilder(
+                  // Displaying textfield placeHolder and adding in textfield icon.
+                  hintText: FormComponents.kHintTextVerificationCode,
+                  suffixIcon: kSuffixIcon)),
+        ),
+        // Creating a Filledbutton named 'Verify' with SlideUp Animation.
+        SlideInUp(
+            child: Buttons.filledButton(
+                // Configuring Filled submit 'REQUEST' button.
+                containerWidth: FormComponents.kSubmitButtonContainerWidth,
+                margin: FormComponents.kSubmitButtonContainerMargin,
+                containerPadding: FormComponents.kSubmitButtonContainerPadding,
+                // Invoking 'request' button on press action.
+                onButtonPressed: verifyButtonOnPressed(),
+                // Labbeling filled button text string.
+                text: FormComponents.kVerifyFButtonLabel)),
+        // Creating prompt for reseting password.
+        SlideInUp(
+            // Displaying prompt.
+            child: FormComponents.prompt(childern: [
+          Custom.text(FormComponents.kResendTButtonText,
+              fontFamily: Fonts.kInterFont),
+          // Creating prompt textbutton.
+          Buttons.textButton(
+              // InVoking action on pressing textbutton.
+              onPressed: resendButtonOnPressed(),
+              // Labelling and styling textbutton placeholder.
+              text: Custom.text(FormComponents.kResendTButtonText,
+                  fontColor: FormComponents
+                      .kPromptTButtonColor) // definin the color of the prompt textbutton.
+              )
+        ])),
+        // Displaying a String of Instruction for successful code varification process with Slide up animation
+        SlideInUp(
+            child: FormComponents.verticalMargin(
+                child: Custom.text(kDirectionText,
+                    // Styling instructional text string.
+                    fontFamily: Fonts.kInterFont,
+                    // Color for the text instructinal string.
+                    fontColor: FormComponents.kInstructionTextColor))),
+      ]);
+}
