@@ -751,3 +751,30 @@ Widget passwordCreationForm(
                 ))
       ]);
 }
+
+/// This function indicates the user success message for password been updated.
+///
+/// Parameters:
+/// [doneButtonOnPressed] - Function to allow user proceed after successfully password update.
+Widget confirmationForm({required Function() doneButtonOnPressed}) {
+  // Constants use to design this form.
+  const String kSuccessMessage =
+      'Password was successfully updated'; //heading text
+  return FormComponents.formContainer(body: [
+    // Setting Heading of this form with slide down animation.
+    SlideInUp(
+      child: FormComponents.headingText(formHeading: kSuccessMessage),
+    ),
+    // Adding a Submission FilledButton Labelled as 'Login' with SlideUp Animation.
+    FadeIn(
+        delay: FormComponents.kDoneButtonAnimationDelay,
+        child: Buttons.filledButton(
+            // Configuring filled button.
+            containerWidth: FormComponents.kSubmitButtonContainerWidth,
+            margin: FormComponents.kSubmitButtonContainerMargin,
+            containerPadding: FormComponents.kSubmitButtonContainerPadding,
+            // Invoking doneButtonOnPressed function.
+            onButtonPressed: doneButtonOnPressed(),
+            text: FormComponents.kDoneFButtonLabel))
+  ]);
+}
