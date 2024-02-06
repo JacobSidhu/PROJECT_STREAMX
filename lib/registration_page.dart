@@ -612,7 +612,7 @@ Widget codeRequestForm(
                 child: Custom.text(kCodeRequestInstructions,
                     // Styling Instructional text string.
                     fontFamily: Fonts.kInterFont,
-                    // Color of string
+                    // Color of string.
                     fontColor: FormComponents.kInstructionTextColor)))
       ]);
 }
