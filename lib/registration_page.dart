@@ -694,3 +694,60 @@ Widget codeVerificationForm({
                     fontColor: FormComponents.kInstructionTextColor))),
       ]);
 }
+
+/// Function allowed user to create new strong password after the
+/// successful user validation.
+///
+/// Parameters:
+/// [backButtonOnPressed] - Back navigation function on pressing back button.
+/// [CreateButtonOnPressed] - Function required to be Invoked on Pressing 'Create' button.
+Widget passwordCreationForm(
+    {required Function() backButtonOnPressed,
+    required Function() createButtonOnPressed}) {
+  // Constants used to create this form.
+  const String kFormHeading = 'Create New Password'; // Form Heading Text.
+  const String kResetDirections =
+      "Include: numbers,symbols,upperCase and lowerCase Charactors";
+  // Returing customized form Container.
+  return FormComponents.formContainer(
+      topNavBar: FormComponents.backButton(
+          // Invoking backButtonOnPressed function to navigate to previous page.
+          onPressed: backButtonOnPressed()),
+      body: [
+        //Setting heading text to the form with Slide Down Animation
+        SlideInDown(
+            child: FormComponents.headingText(formHeading: kFormHeading)),
+        // TextField to create new password.
+        SlideInLeft(
+          child: FormComponents.verticalMargin(
+              // Displaying Textfield with hintText.
+              child: Custom.textfieldBuilder(
+                  hintText: FormComponents.kHintTextNewPassword)),
+        ),
+        // TextField to confirm new password.
+        SlideInRight(
+          child: FormComponents.verticalMargin(
+              // TextField to recheck or confirm password.
+              child: Custom.textfieldBuilder(
+                  hintText: FormComponents.kHintTextConfirmPassword)),
+        ),
+        //Creating Submission FilledButton Labelled as 'RESET'
+        SlideInUp(
+            child: Buttons.filledButton(
+                // Customizing filleb button.
+                containerWidth: FormComponents.kSubmitButtonContainerWidth,
+                margin: FormComponents.kSubmitButtonContainerMargin,
+                containerPadding: FormComponents.kSubmitButtonContainerPadding,
+                // Calling CreateButtonOnPressed() to successfully updare password.
+                onButtonPressed: createButtonOnPressed(),
+                // Labelling 'Create' filled button.
+                text: FormComponents.kCreateFButtonLabel)),
+        SlideInUp(
+            // Displaying Instructions to create a strong password.
+            child: Custom.text(kResetDirections,
+                fontFamily: Fonts.kInterFont, // Password reset instruction
+                fontColor: FormComponents
+                    .kInstructionTextColor // Setting color for Instructional text.
+                ))
+      ]);
+}
