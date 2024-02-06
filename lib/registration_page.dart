@@ -463,3 +463,156 @@ Widget loginForm({
         ]))
       ]);
 }
+
+/// Function 'signUpForm' generates the signUp interface so to allow user to create new
+/// account with the application if user do not account already. It will allow user to create new account
+/// by providing username, email address and password.
+///
+/// Paramters:
+/// [backButtonOnPressed] - This is requires the function to pass on pressing back navigation button.
+/// [signUpButtonOnPressed] - This is function Invokes the action when user press the signUp Button.
+/// [loginButtonOnPressed] - This function is the action to be taken while pressing prompted login button in the view.
+Widget signUpForm({
+  required Function() backButtonOnPressed,
+  required Function() signUpButtonOnPressed,
+  required Function() loginButtonOnPressed,
+}) {
+  //Constant value used in the form
+  const String kFormHeading = 'Create New Account'; //Form heading Text
+  // Returing formContainer to encapsulate signUp page/form.
+  return FormComponents.formContainer(
+      // Creating back navigation button.
+      topNavBar: FormComponents.backButton(
+          onPressed:
+              // Invoking on pressing button action.
+              backButtonOnPressed()),
+
+      /// Body content of the signUp form.
+      body: [
+        // Wrapping form heading in SlideInDown Animation.
+        SlideInDown(
+            child: FormComponents.headingText(
+                // Creating Form heading title.
+                formHeading: kFormHeading)), //Heading text Of the form.
+        //Building different TextFields by wrapping in slide Left and Right Animation.
+        SlideInLeft(
+          child: FormComponents.verticalMargin(
+              //Username textfield
+              child: Custom.textfieldBuilder(
+                  hintText: FormComponents.kHintTextUsername)),
+        ),
+        SlideInRight(
+          child: FormComponents.verticalMargin(
+              //Email textField
+              child: Custom.textfieldBuilder(
+                  hintText: FormComponents.kHintTextEmail)),
+        ),
+        SlideInLeft(
+          child: FormComponents.verticalMargin(
+              // Password textField.
+              child: Custom.textfieldBuilder(
+                  hintText: FormComponents.kHintTextPassword)),
+        ),
+        // Creating a filled button name 'Create'.
+        SlideInUp(
+            child: Buttons.filledButton(
+                //Setting contant margin
+                containerWidth: FormComponents.kSubmitButtonContainerWidth,
+                margin: FormComponents.kSubmitButtonContainerMargin,
+                containerPadding: FormComponents.kSubmitButtonContainerPadding,
+                // Invoking function when Filledbutton is pressed.
+                onButtonPressed: signUpButtonOnPressed(),
+                //Labelling filledButton with text
+                text: FormComponents.kCreateButtonText)),
+        //creating a horizonal prompt for login instead of signUp.
+        SlideInUp(
+          child: FormComponents.prompt(childern: [
+            // Displaying prompt text string.
+            Custom.text(FormComponents.kAlreadyHaveAccountPromptText),
+            // Creating prompt 'login' text button.
+            Buttons.textButton(
+                // Invoking function when 'login' Textbutton is pressed.
+                onPressed: loginButtonOnPressed(),
+                // Labelling TextButton.
+                text: Custom.text(FormComponents.kLoginTButtonText,
+                    fontColor: FormComponents.kPromptTButtonColor))
+          ]),
+        ),
+      ]);
+}
+
+/// 'codeRequestForm' generates the interface for the user if user forget the password and it verifies
+/// the valid user identity by sending code to their email address.
+///
+/// Parameters:
+/// [backButtonOnPressed] - This function required to be invoked when user press back navigation button.
+/// [requestCodeButtonOnPressed] - This function required to take action on pressing 'request code' button.
+Widget codeRequestForm(
+    {required Function() backButtonOnPressed,
+    required Function() requestCodeButtonOnPressed}) {
+  //Constant value used in the form
+  const String kFormHeading = 'Reset Password'; // Form heading title.
+  const String kCodeRequestInstructions =
+      "Please enter username or email address to get validation code to reset password";
+  // Returing form container to contain code request page.
+  return FormComponents.formContainer(
+      // Creating back navigation button.
+      topNavBar: FormComponents.backButton(
+          // Invoking on pressing back nav button.
+          onPressed: backButtonOnPressed()),
+      // Main body content of the code request form/page.
+      body: [
+        // Creating the heading title for the page.
+        SlideInDown(
+            child: FormComponents.headingText(formHeading: kFormHeading)),
+        // Building different TextFields by wrapping in specific slide animation.
+        SlideInLeft(
+          // Adding fixed margin to textfield.
+          child: FormComponents.verticalMargin(
+              // Username textField.
+              child: Custom.textfieldBuilder(
+                  hintText: FormComponents.kHintTextUsername)),
+        ),
+        FadeIn(
+          child: FormComponents.verticalMargin(
+              // Adding a Divider between two textField.
+              child: FormComponents.prompt(childern: [
+            //Adding a divder line '------or------'
+            Expanded(
+                // Creating dividing horizontal line.
+                child: Custom.divider()),
+            // Adding 'or' text between the two dividing lines.
+            Custom.text(FormComponents.kOrText),
+            // Creating another dividing horizontal line.
+            Expanded(child: Custom.divider()),
+          ])),
+        ),
+        SlideInRight(
+          child: FormComponents.verticalMargin(
+              // Email address textfield.
+              child: Custom.textfieldBuilder(
+                  hintText: FormComponents.kHintTextEmail)),
+        ),
+        // Creating a filled button name 'Create' and wrapping in slide Up animation widget..
+        SlideInUp(
+          child: Buttons.filledButton(
+              // Configuring the properties of the filledButton.
+              containerWidth: FormComponents.kSubmitButtonContainerWidth,
+              margin: FormComponents.kSubmitButtonContainerMargin,
+              containerPadding: FormComponents.kSubmitButtonContainerPadding,
+              //Invoking function when Filledbutton is pressed
+              onButtonPressed: requestCodeButtonOnPressed(),
+              // Labelling 'Reset' filledButton with text.
+              text: FormComponents.kCreateFButtonLabel),
+        ),
+        // Displaying Instructions about the code request.
+        SlideInUp(
+            // Encapsulating Instrcutions into fixed margin container.
+            child: FormComponents.verticalMargin(
+                child: Custom.text(kCodeRequestInstructions,
+                    // Styling Instructional text string.
+                    fontFamily: Fonts.kInterFont,
+                    // Color of string
+                    fontColor: FormComponents.kInstructionTextColor)))
+      ]);
+}
