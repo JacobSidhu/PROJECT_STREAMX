@@ -371,3 +371,95 @@ Widget welcome(
     ]),
   );
 }
+
+/// This function creates the UI interface for the user to allow them to login with
+/// their credentials i.e username/email and password. This page also contains a prompt to
+/// signUp and to reset forgotten password.
+///
+/// Parameters:
+/// - [backButtonOnPressed]: The function to be executed when pressing
+///   the back button.
+/// - [signUpButtonOnPressed]: The function to be executed when pressing
+///   the sign-up button.
+/// - [loginButtonOnPressed]: The function to be executed when pressing
+///   the login button.
+/// - [resetButtonOnPressed]: The function to be executed when pressing
+///   the reset button.
+Widget loginForm({
+  required Function() backButtonOnPressed,
+  required Function() signUpButtonOnPressed,
+  required Function() loginButtonOnPressed,
+  required Function() resetButtonOnPressed,
+}) {
+  const String kLoginHeading = "Enter Login Details";
+  // Returing customized form container.
+  return FormComponents.formContainer(
+      // Creating navigation bar.
+      topNavBar: FormComponents.backButton(onPressed: backButtonOnPressed()),
+      body: [
+        // Displaying page/form heading.
+        SlideInDown(
+            child: FormComponents.headingText(formHeading: kLoginHeading)),
+        // Building different TextFields.
+        SlideInLeft(
+          // Encapsulating textfeild into customized container.
+          child: FormComponents.verticalMargin(
+              // Creating a textfeild to get username input.
+              child: Custom.textfieldBuilder(
+                  hintText: FormComponents.kHintTextUsername)),
+        ),
+        // Creating a textfeild to get password input.
+        SlideInRight(
+            // Encapsulating textfeild into customized container.
+            child: FormComponents.verticalMargin(
+                // Invoking customzied textfield.
+                child: Custom.textfieldBuilder(
+                    // Passing hinttext for password
+                    hintText: FormComponents
+                        .kHintTextPassword //                   )),
+                    ))),
+        // Creating a Horizontal prompt line for signing up with slideUp Animation.
+        SlideInUp(
+          child: FormComponents.prompt(childern: [
+            // Displaying Prompt Text String.
+            Custom.text(FormComponents.kNewToScreamXPromptText),
+            // Adding Space between.
+            Spacer(),
+            // Creating a text button for signUp.
+            Buttons.textButton(
+                // Invoking function/action on pressing signUp button.
+                onPressed: signUpButtonOnPressed(),
+                // Adding text to the text button with SignUP text.
+                text: Custom.text(FormComponents.kSignUpTButtonText,
+                    // Prompt SignUp button color.
+                    fontColor: SecondaryColors.kSkipButtonColor))
+          ]),
+        ),
+        // Creating a filled button Labelled 'LOGIN'.
+        SlideInUp(
+          // Configuring properties of the filled button container.
+          child: Buttons.filledButton(
+              // Configuring Filled button.
+              containerWidth: FormComponents.kSubmitButtonContainerWidth,
+              margin: FormComponents.kSubmitButtonContainerMargin,
+              containerPadding: FormComponents.kSubmitButtonContainerPadding,
+              //Invoking function when Filledbutton is pressed
+              onButtonPressed: loginButtonOnPressed(),
+              //Labelling filledButton with text
+              text: FormComponents.kLoginFButtonLabel),
+        ),
+        //creating a horizontal line for password reset
+        SlideInUp(
+            child: FormComponents.prompt(childern: [
+          // Displaying password forget prompt string.
+          Custom.text(FormComponents.kPasswordResetPromptText),
+          Buttons.textButton(
+              // Invoking function when Textbutton is pressed.
+              onPressed: resetButtonOnPressed(),
+              // Labelling and styling TextButton text
+              text: Custom.text(FormComponents.kResetTButtonText,
+                  // Prompt 'reset' button color.
+                  fontColor: FormComponents.kPromptTButtonColor))
+        ]))
+      ]);
+}
