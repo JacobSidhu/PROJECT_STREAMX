@@ -40,6 +40,9 @@ dependencies:
   firebase_auth: ^4.17.4
   google_nav_bar: ^5.0.6
   http: ^1.2.0
+  firebase_storage: ^11.6.6
+  google_fonts: ^6.1.0
+
 
 
 dev_dependencies:
