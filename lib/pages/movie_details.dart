@@ -1,4 +1,4 @@
-/// 'preview_movie.dart'
+/// 'movie_details.dart'
 ///
 /// This dart file contains the UI design of the movie poster previewer, that
 /// shows the details overview about the movie. It has only one stateful class
@@ -7,10 +7,10 @@
 /// Essential imported packages, dependencies and utitlites required for the completion
 /// of the design UI.
 import 'package:animate_do/animate_do.dart'; // Importing 'animate_do' dependency.
-import 'package:flutter/material.dart';
-import 'package:streamx/utils/api/api.dart';
-import 'package:streamx/utils/const_methods.dart';
-import 'package:streamx/utils/theme.dart';
+import 'package:flutter/material.dart'; // Importing 'Material' package.
+import 'package:streamx/utils/api/api.dart'; // Importing 'api' file.
+import 'package:streamx/utils/const_methods.dart'; // Importing utitlies needed.
+import 'package:streamx/utils/theme.dart'; // Importing theme of the application.
 
 /// MoviePosterViewer class was defined to design the UI components
 /// required for the implementation of the movie poster detailed view.
@@ -18,15 +18,15 @@ import 'package:streamx/utils/theme.dart';
 /// requires the MovieData object and key. It has various UI components separated
 /// into each corresponding functions that renders the UI on the screen.
 /// it extends to the statefulWidget to update UI components during runTime.
-class MoviePosterViewer extends StatefulWidget {
+class MovieDetailsViewer extends StatefulWidget {
   final MovieData object; // Empty MovieData Object.
-  const MoviePosterViewer({super.key, required this.object});
+  const MovieDetailsViewer({super.key, required this.object});
   @override // Creating Widget Class State.
-  MoviePosterViewerState createState() => MoviePosterViewerState();
+  MovieDetailsViewerState createState() => MovieDetailsViewerState();
 } // MoviePosterViewer close.
 
 /// Defining MoviePosterViewer State.
-class MoviePosterViewerState extends State<MoviePosterViewer> {
+class MovieDetailsViewerState extends State<MovieDetailsViewer> {
   // Instantiating page Controller to controll the pageView.
   final PageController _pageController = PageController();
   // To keep track of current page Index within PageView.
@@ -370,7 +370,7 @@ class MoviePosterViewerState extends State<MoviePosterViewer> {
               // Building and Returing custom poster() widget.
               return Poster(
                   posterPath: data[index].posterPath, // Accessing Poster Path.
-                  navigateTo: MoviePosterViewer(object: data[index]));
+                  navigateTo: MovieDetailsViewer(object: data[index]));
             });
       },
       // Invoking Action when data was empty.
@@ -393,7 +393,7 @@ class MoviePosterViewerState extends State<MoviePosterViewer> {
                   // Returing the Poster.
                   return Poster(
                       posterPath: data[index].posterPath,
-                      navigateTo: MoviePosterViewer(object: data[index]));
+                      navigateTo: MovieDetailsViewer(object: data[index]));
                 });
           }),
     );
