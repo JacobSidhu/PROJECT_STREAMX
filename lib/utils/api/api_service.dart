@@ -262,3 +262,137 @@ class MovieData {
         releaseData: json["release_date"] ?? "Not Specified");
   }
 } // MovieData close.
+
+/// This class all ecapsulates all api services relates to the movies
+/// from the TMDB. It has all static function member in it.
+class TMDBMovies {
+  /// This asynchronous function makes the API request to get
+  /// the list of all genres from the TMDB. This function invoked the
+  /// makeRequest() to get the response from the API requese.
+  /// It returns the List of all genres or categories.
+  /// Parameters: none.
+  static Future<List<Genre>?> genres() async {
+    // To capturing the response returned from makeRequest function.
+    final response =
+        await TMDBAPIManager.makeRequest(url: TMDBMovieAPIs.genreListURL);
+    // Checking response
+    if (response.statusCode == TMDBAPIManager.kSuccessCode) {
+      // If response was the success then returning list of genre from response body.
+      final List<dynamic>? genres = jsonDecode(response.body)['genres'];
+      if (genres != null) {
+        // returning the list of object Genre class.
+        List<Genre> genreList =
+            genres.map((data) => Genre.fromJson(data)).toList();
+        return genreList;
+      }
+      print("Genre was null ! from genre function");
+      return null;
+    } else {
+      print("Exception thrown from genre function from http response");
+      // Throwing exceptions if response was unsuccessful.
+      throw http.Response(response.body, response.statusCode);
+    }
+  }
+
+  /// This function makes the API request to get
+  /// to search for the movies or keyword passed into the function
+  /// makeRequest() to get the response from the API requese.
+  /// It returns the List of popular movie or categories.
+  /// Parameters:
+  /// [keyword] - required to serach for related content.
+  static Future<List<MovieData>?> searchMovies(
+      {required String keyword, String? page = "1"}) async {
+    // Appending search API url.
+    String urlLink =
+        '${TMDBMovieAPIs.kMovieSearchBaselineUrl}$keyword&$page&api_key=${AuthAPIKeys.kTMDBApiKey}';
+    final http.Response response = await http.get(Uri.parse(urlLink));
+    // Checking response
+    if (response.statusCode == TMDBAPIManager.kSuccessCode) {
+      // If response was the success then returning list of required movies from response body.
+      final List<dynamic>? moviesList = jsonDecode(response.body)['results'];
+      if (moviesList != null) {
+        // Returning the list of object MovieFrame class.
+        return moviesList.map((data) => MovieData.fromJson(data)).toList();
+      }
+      print("results was null from searchMovie function");
+      // Returning the null if there isnt any result from search Movie function.
+      return null;
+    } else {
+      print("Expection thrown from searchMovies with no http response");
+      // Throwing exceptions if response was unsuccessful.
+      throw http.Response(response.body, response.statusCode);
+    }
+  }
+
+  /// This Future returns the List of the Instance of the movies
+  /// that are similar to the movie id been passed into the function
+  /// paramter.
+  /// Parameters:
+  /// [movieId] - required to serach for related content.
+  static Future<List<MovieData>?> similarMovies({required int movieId}) async {
+    print("from await function");
+    // Appending similar movie request baseline url.
+    String requestUrls = 'https://api.themoviedb.org/3/movie/$movieId/similar';
+    // Returning list similar movies.
+    return await TMDBAPIManager.getMovies(url: requestUrls);
+  }
+
+  /// This Function makes the request to fetch popular movies from TMDB.
+  static Future<List<MovieData>?> popularMovies() async {
+    return await TMDBAPIManager.getMovies(url: TMDBMovieAPIs.popularMoviesUrl);
+  }
+
+  /// This Function makes the request to fetch discovering movies from TMDB.
+  static Future<List<MovieData>?> discoverMovies() async {
+    return await TMDBAPIManager.getMovies(url: TMDBMovieAPIs.discoverMoviesUrl);
+  }
+
+  /// This function fetchs the upcoming movies.
+  static Future<List<MovieData>?> upcomingMovies() async {
+    // Api url to make request to.
+    const String baseUrl = "https://api.themoviedb.org/3/movie/upcoming";
+    return await TMDBAPIManager.getMovies(url: baseUrl);
+  }
+
+  // This function fetchs the list of movies that are currently in theatre.
+  static Future<List<MovieData>?> inTheatres() async {
+    // Api urls for request data.
+    String baseUrls = "https://api.themoviedb.org/3/movie/now_playing";
+    return await TMDBAPIManager.getMovies(url: baseUrls);
+  }
+
+  /// This Function makes the request to fetch top-Rated movies from TMDB.
+  static Future<List<MovieData>?> topRatedMovies() async {
+    return await TMDBAPIManager.getMovies(url: TMDBMovieAPIs.discoverMoviesUrl);
+  }
+
+  /// This function was defined to porivder the details of the movie providers.
+  static Future<WatchProviders?> watchProvider({required int movieId}) async {
+    String apiUrl =
+        "https://api.themoviedb.org/3/movie/$movieId/watch/providers";
+    final response = await TMDBAPIManager.makeRequest(url: apiUrl);
+    if (response.statusCode == TMDBAPIManager.kSuccessCode) {
+      print('success response from api url logform: watchProvider function');
+      final Map<String, dynamic>? jsonResponse = json.decode(response.body);
+      final Map<String, dynamic>? results = jsonResponse?["results"];
+      if (results != null && results.isNotEmpty) {
+        print("results wasnt null in watchProvider function");
+        final Map<String, dynamic>? gbData = results["GB"];
+        if (gbData != null) {
+          print("results wasnt null in watchProvider function");
+          final WatchProviders gbProviders = WatchProviders.fromJson(gbData);
+          return gbProviders;
+        } else {
+          print("GB was not found in results in watchProvder functions");
+          return null;
+        }
+      } else {
+        print("Results was null in watchprovider function");
+        return null;
+      }
+    } else {
+      print("Expection throwen from watchProvider");
+      throw Exception("Failed To receive response from Internet");
+    }
+  }
+} // TMDBMovies close.
