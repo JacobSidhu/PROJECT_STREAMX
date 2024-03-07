@@ -101,158 +101,6 @@ class TMDBAPIManager {
   }
 } // TMDBAPIManager close.
 
-class TMDBMovies {
-  /// This asynchronous function makes the API request to get
-  /// the list of all genres from the TMDB. This function invoked the
-  /// makeRequest() to get the response from the API requese.
-  /// It returns the List of all genres or categories.
-  /// Parameters: none.
-  static Future<List<Genre>?> genres() async {
-    // To capturing the response returned from makeRequest function.
-    final response =
-        await TMDBAPIManager.makeRequest(url: TMDBMovieAPIs.genreListURL);
-    // Checking response
-    if (response.statusCode == TMDBAPIManager.kSuccessCode) {
-      // If response was the success then returning list of genre from response body.
-      final List<dynamic>? genres = jsonDecode(response.body)['genres'];
-      if (genres != null) {
-        // returning the list of object Genre class.
-        List<Genre> genreList =
-            genres.map((data) => Genre.fromJson(data)).toList();
-        return genreList;
-      }
-      print("Genre was null ! from genre function");
-      return null;
-    } else {
-      print("Exception thrown from genre function from http response");
-      // Throwing exceptions if response was unsuccessful.
-      throw http.Response(response.body, response.statusCode);
-    }
-  }
-
-  /// This function makes the API request to get
-  /// to search for the movies or keyword passed into the function
-  /// makeRequest() to get the response from the API requese.
-  /// It returns the List of popular movie or categories.
-  /// Parameters:
-  /// [keyword] - required to serach for related content.
-  static Future<List<MovieData>?> searchMovies(
-      {required String keyword, String? page = "1"}) async {
-    // Appending search API url.
-    String urlLink =
-        '${TMDBMovieAPIs.kMovieSearchBaselineUrl}$keyword&$page&api_key=${AuthAPIKeys.kTMDBApiKey}';
-    final http.Response response = await http.get(Uri.parse(urlLink));
-    // Checking response
-    if (response.statusCode == TMDBAPIManager.kSuccessCode) {
-      // If response was the success then returning list of required movies from response body.
-      final List<dynamic>? moviesList = jsonDecode(response.body)['results'];
-      if (moviesList != null) {
-        // Returning the list of object MovieFrame class.
-        return moviesList.map((data) => MovieData.fromJson(data)).toList();
-      }
-      print("results was null from searchMovie function");
-      // Returning the null if there isnt any result from search Movie function.
-      return null;
-    } else {
-      print("Expection thrown from searchMovies with no http response");
-      // Throwing exceptions if response was unsuccessful.
-      throw http.Response(response.body, response.statusCode);
-    }
-  }
-
-  /// This Future returns the List of the Instance of the movies
-  /// that are similar to the movie id been passed into the function
-  /// paramter.
-  /// Parameters:
-  /// [movieId] - required to serach for related content.
-  static Future<List<MovieData>?> similarMovies({required int movieId}) async {
-    print("from await function");
-    // Appending similar movie request baseline url.
-    String requestUrls = 'https://api.themoviedb.org/3/movie/$movieId/similar';
-    // Returning list similar movies.
-    return await TMDBAPIManager.getMovies(url: requestUrls);
-  }
-
-  /// This Function makes the request to fetch popular movies from TMDB.
-  static Future<List<MovieData>?> popularMovies() async {
-    return await TMDBAPIManager.getMovies(url: TMDBMovieAPIs.popularMoviesUrl);
-  }
-
-  /// This Function makes the request to fetch discovering movies from TMDB.
-  static Future<List<MovieData>?> discoverMovies() async {
-    return await TMDBAPIManager.getMovies(url: TMDBMovieAPIs.discoverMoviesUrl);
-  }
-
-  /// This function fetchs the upcoming movies.
-  static Future<List<MovieData>?> upcomingMovies() async {
-    // Api url to make request to.
-    const String baseUrl = "https://api.themoviedb.org/3/movie/upcoming";
-    return await TMDBAPIManager.getMovies(url: baseUrl);
-  }
-
-  // This function fetchs the list of movies that are currently in theatre.
-  static Future<List<MovieData>?> inTheatres() async {
-    // Api urls for request data.
-    String baseUrls = "https://api.themoviedb.org/3/movie/now_playing";
-    return await TMDBAPIManager.getMovies(url: baseUrls);
-  }
-
-  /// This Function makes the request to fetch top-Rated movies from TMDB.
-  static Future<List<MovieData>?> topRatedMovies() async {
-    return await TMDBAPIManager.getMovies(url: TMDBMovieAPIs.discoverMoviesUrl);
-  }
-
-  /// This function was defined to porivder the details of the movie providers.
-  static Future<WatchProviders?> watchProvider({required int movieId}) async {
-    String apiUrl =
-        "https://api.themoviedb.org/3/movie/$movieId/watch/providers";
-    final response = await TMDBAPIManager.makeRequest(url: apiUrl);
-    if (response.statusCode == TMDBAPIManager.kSuccessCode) {
-      print('success response from api url logform: watchProvider function');
-      final Map<String, dynamic>? jsonResponse = json.decode(response.body);
-      final Map<String, dynamic>? results = jsonResponse?["results"];
-      if (results != null && results.isNotEmpty) {
-        print("results wasnt null in watchProvider function");
-        final Map<String, dynamic>? gbData = results["GB"];
-        if (gbData != null) {
-          print("results wasnt null in watchProvider function");
-          final WatchProviders gbProviders = WatchProviders.fromJson(gbData);
-          return gbProviders;
-        } else {
-          print("GB was not found in results in watchProvder functions");
-          return null;
-        }
-      } else {
-        print("Results was null in watchprovider function");
-        return null;
-      }
-    } else {
-      print("Expection throwen from watchProvider");
-      throw Exception("Failed To receive response from Internet");
-    }
-  }
-}
-
-/// This class contains the api functions to retrieve various TV shows related
-/// Information. Class named 'TMDBTvShows' has all its members as static. class do not
-/// have any private field or member of the class.
-class TMDBTvShows {
-  static Future<List<TVShow>?> discover() {
-    // Base Api url link
-    const String apiUrls =
-        "https://api.themoviedb.org/3/discover/tv?api_key=${AuthAPIKeys.kTMDBApiKey}";
-    return TMDBAPIManager.getShows(url: apiUrls);
-  }
-
-  /// This Function search for Tv shows from TMDB.
-  static Future<List<TVShow>?> searchTVShows({required String keyword}) async {
-    // BaseLine url for to search TV shows.
-    String baseUrl =
-        "https://api.themoviedb.org/3/search/tv?query=$keyword&api_key=${AuthAPIKeys.kTMDBApiKey}";
-    return await TMDBAPIManager.getShows(url: baseUrl);
-  }
-}
-
 /// WatchProviderInfo class provides the data structure for the WatchProviders
 /// it has two members in this class.
 class WatchProviderInfo {
@@ -276,7 +124,7 @@ class WatchProviderInfo {
       providerName: json['provider_name'] ?? "Service",
     );
   }
-}
+} // WatchProviderInfo close.
 
 /// This class was defined to store the lists of the movie or show buy and rent providers.
 /// class has two constructor factory and default. it do not has any methods.
@@ -309,7 +157,7 @@ class WatchProviders {
     // Returing nullable value.
     return WatchProviders(rent: rentProviders, buy: buyProviders);
   }
-}
+} // WatchProviders close.
 
 /// This class was defined to struct the data related the TV shows recieved from json.
 /// class has factory constructor that takes json data and to assign the class constructor.
@@ -320,8 +168,8 @@ class TVShow {
   final String backDrop; // To store the backdrop image path.
   final String originalName; // Contains the original name of the show.
   final String title; // Contains known title for the show.
-  final String posterPath;
-  final String overview;
+  final String posterPath; // To store show poster path.
+  final String overview; // Stores the overview of the show.
 
   // Class Constructor requires the information.
   TVShow(
@@ -341,12 +189,11 @@ class TVShow {
         originalLanguage: json["original_language"] ?? "Unknown",
         originalName: json["original_name"] ?? json["name"] ?? "UnKnown",
         title: json["name"] ?? json["original_name"] ?? "No Title",
-        posterPath: json["poster_path"] == null
-            ? LocalImages.kPosterPlaceHolder
-            : TMDBAPIManager.imageLoaderUrl(imagePath: json["poster_path"]),
-        backDrop: json["backdrop_path"] == null
-            ? LocalImages.kPosterPlaceHolder
-            : TMDBAPIManager.imageLoaderUrl(imagePath: json["backdrop_path"]),
+        // Appending the TMDB image loader with the poster.
+        posterPath:
+            TMDBAPIManager.imageLoaderUrl(imagePath: json["poster_path"]),
+        backDrop:
+            TMDBAPIManager.imageLoaderUrl(imagePath: json["backdrop_path"]),
         overview: json["overview"] ?? "Overview not Found");
   }
 }
@@ -404,12 +251,11 @@ class MovieData {
         title: json["title"] ?? "No title",
         originalTitle: json["original_title"] ?? json["title"] ?? "Unknown",
         isAdult: json["adult"] ?? false,
-        posterPath: json["poster_path"] == null
-            ? LocalImages.kPosterPlaceHolder
-            : TMDBAPIManager.imageLoaderUrl(imagePath: json["poster_path"]),
-        backDrop: json["backdrop_path"] == null
-            ? json["poster_path"]
-            : TMDBAPIManager.imageLoaderUrl(imagePath: json["backdrop_path"]),
+        // Appending the TMDB image loader with the poster.
+        posterPath:
+            TMDBAPIManager.imageLoaderUrl(imagePath: json["poster_path"]),
+        backDrop:
+            TMDBAPIManager.imageLoaderUrl(imagePath: json["backdrop_path"]),
         id: json["id"] ?? 0,
         genre: List<int>.from(json["genre_ids"] ?? []),
         overview: json["overview"] ?? "Information unavailable.",
