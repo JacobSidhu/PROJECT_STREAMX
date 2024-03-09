@@ -1,18 +1,18 @@
 /// 'movie_details.dart'
 ///
-/// This dart file contains the UI design of the movie poster previewer, that
-/// shows the details overview about the movie. It has only one stateful class
+/// This dart file contains the UI design of the movie poster details Viewer screen, that
+/// shows the detailed overview about the movie. It has only one stateful class
 /// to render UI in the application.
 
 /// Essential imported packages, dependencies and utitlites required for the completion
 /// of the design UI.
 import 'package:animate_do/animate_do.dart'; // Importing 'animate_do' dependency.
 import 'package:flutter/material.dart'; // Importing 'Material' package.
-import 'package:streamx/utils/api/api.dart'; // Importing 'api' file.
+import 'package:streamx/utils/api/api_service.dart'; // Importing 'api' file.
 import 'package:streamx/utils/const_methods.dart'; // Importing utitlies needed.
 import 'package:streamx/utils/theme.dart'; // Importing theme of the application.
 
-/// MoviePosterViewer class was defined to design the UI components
+/// MovieDetailsViewer class was defined to design the UI components
 /// required for the implementation of the movie poster detailed view.
 /// this class has only one MovieData type member and a constructor that
 /// requires the MovieData object and key. It has various UI components separated
@@ -23,9 +23,9 @@ class MovieDetailsViewer extends StatefulWidget {
   const MovieDetailsViewer({super.key, required this.object});
   @override // Creating Widget Class State.
   MovieDetailsViewerState createState() => MovieDetailsViewerState();
-} // MoviePosterViewer close.
+} // MovieDetailsViewer close.
 
-/// Defining MoviePosterViewer State.
+/// Defining MovieDetailsViewer State.
 class MovieDetailsViewerState extends State<MovieDetailsViewer> {
   // Instantiating page Controller to controll the pageView.
   final PageController _pageController = PageController();
@@ -357,19 +357,14 @@ class MovieDetailsViewerState extends State<MovieDetailsViewer> {
       // Designing the context snapshot succesfully has data.
       whenHasData: (data) {
         // Returning GridViewBuilder.
-        return GridView.builder(
-            // Disabling manual scroll controll.
-            physics: NeverScrollableScrollPhysics(),
-            // Defining the dimensions of the grid.
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                childAspectRatio: kChildAspectRatio,
-                crossAxisSpacing: kCrossAxisSpacing,
-                crossAxisCount: kCrossAxisCount),
-            itemCount: data.length, // Grid Tems lenght.
-            itemBuilder: (context, index) {
-              // Building and Returing custom poster() widget.
+        return PosterGridGenerator(
+            object: data,
+            itemsCount: data.length,
+            poster: (index) {
+              // Returing Poster.
               return Poster(
                   posterPath: data[index].posterPath, // Accessing Poster Path.
+                  // On click navigating to movieDetails Viewer.
                   navigateTo: MovieDetailsViewer(object: data[index]));
             });
       },
