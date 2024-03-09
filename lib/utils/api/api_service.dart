@@ -263,7 +263,7 @@ class MovieData {
   }
 } // MovieData close.
 
-/// This class all ecapsulates all api services relates to the movies
+/// This class all encapsulates all api services relates to the movies
 /// from the TMDB. It has all static function member in it.
 class TMDBMovies {
   /// This asynchronous function makes the API request to get
@@ -330,7 +330,7 @@ class TMDBMovies {
   /// Parameters:
   /// [movieId] - required to serach for related content.
   static Future<List<MovieData>?> similarMovies({required int movieId}) async {
-    print("from await function");
+    print("from await function in similarMovies");
     // Appending similar movie request baseline url.
     String requestUrls = 'https://api.themoviedb.org/3/movie/$movieId/similar';
     // Returning list similar movies.
@@ -394,6 +394,13 @@ class TMDBMovies {
       print("Expection throwen from watchProvider");
       throw Exception("Failed To receive response from Internet");
     }
+  }
+
+  // Function defined to fetch currently playing movies in the theatres.
+  static Future<List<MovieData>?> currentlyInTheatres() async {
+    // Api url to request lsit of movies currently in theatre.
+    String apiUrl = "https://api.themoviedb.org/3/movie/now_playing";
+    return await TMDBAPIManager.getMovies(url: apiUrl);
   }
 } // TMDBMovies close.
 
