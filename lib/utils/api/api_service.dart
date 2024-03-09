@@ -7,7 +7,7 @@
 /// Importing Packages and Utilities required for this file.
 // Importing http package to make internet requests.
 import 'package:http/http.dart' as http;
-import 'dart:convert'; // Importing dart convert package to convert data.
+import 'dart:convert'; // Importing dart convert json to convert data.
 import 'package:streamx/utils/api/auth_apikeys.dart';
 import 'package:streamx/utils/const_values.dart';
 
