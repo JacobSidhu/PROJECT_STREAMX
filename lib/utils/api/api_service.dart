@@ -19,6 +19,11 @@ class TMDBAPIManager {
   static const int kSuccessCode = 200; // Success response code.
   static const int kFailureCode = 404; // Failed response code.
 
+  /// List of constant feedback and error messages string.
+  static const String kDataNotFound = "Data Was Not Found";
+  static const String kHttpError = "Network Issue";
+  static const String kSomethingWrong = "Something went wrong please try later";
+
   /// This asynchronous function of Future<List<MovieData>?> makes the API request to get
   /// the list of movies from the TMDB. This function invoked the
   /// makeRequest() to get the response from the API requese.
