@@ -7,7 +7,9 @@
 /// within the application.
 
 /// Important essential packages required for the design.
+import 'package:animate_do/animate_do.dart'; // Importing Animation package path.
 import 'package:flutter/material.dart'; // Material design package.
+import 'package:streamx/utils/theme.dart'; // Importing utilities.
 
 /// This statefulWidget class 'SearchPanel' is responsible for rendering an interface
 /// that allow user to search for their favorite movies and tv shows.
@@ -27,10 +29,27 @@ class SearchPanel extends StatefulWidget {
 
 // Defining class state named 'SearchPanelState'.
 class SearchPanelState extends State<SearchPanel> {
+  // boolean flags to determine textfeild focus modes.
+  bool isFocused = true; // Determines if textFeild is in focus.
+  bool isEmptyField = true; // keep account if textfield is empty.
+  // Creating TextEditingController Instance.
+  final TextEditingController _textEditingController = TextEditingController();
+  // Defining future object to store list of upComing movies.
   @override // Overriding build() method.
   Widget build(BuildContext context) {
     // Returning context.
-    return Scaffold();
+    return Scaffold(
+        // Setting scaffold background color to Color role 'background'.
+        backgroundColor: Theme.of(context).colorScheme.background,
+        // Defining body of the Scaffold.
+        // Laying out body of scaffold into vertical list view using CustomScrollView.
+        body: CustomScrollView(
+            // Defining Keyboard behaviour.
+            // It close the keyboard onDrag on the screen.
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+            slivers: [
+              sliverAppBar(), // Renders search textField.
+            ]));
   }
 
   /// The function named 'sliverAppBar' responsible for to display search textfield in the screen.
@@ -143,94 +162,4 @@ class SearchPanelState extends State<SearchPanel> {
       floating: true,
     );
   }
-
-  /// This function returns the upcoming movies. It was definied here to provide
-  /// preRendered default row in the result panel to facilite user with the upComing
-  /// content. Returns: [SliverToBoxAdaptor] that adapts the row of upcoming movies.
-  /// Parameters: none.
-  SliverToBoxAdapter upComingMoviesRow() {
-    return SliverToBoxAdapter(
-        child: CustomFutureBuilder(
-            future: upcomingMovies,
-            whenHasData: (data) {
-              return PosterRowGenerator(
-                  object: data,
-                  itemCount: data.length,
-                  poster: (index) {
-                    return Poster(
-                        posterPath: data[index].posterPath,
-                        navigateTo: MovieDetailsViewer(object: data[index]));
-                  });
-            }));
-  } // upComingMovieRow() close.
-
-  /// movieSearchResultViewer function was defined to render result from
-  /// movies api using keyword privided inside the textfield.
-  /// This function requires the keyword to return results accordingly.
-  /// Retunrs: [CustomFutureViewer] that returns resuls based on data recieved from
-  /// api request made.
-  /// Parameters: [keyword] is of type string required to enable search on.
-  Widget movieSearchResultViewer({required String keyword}) {
-    // Returning CustomFutureBuilder.
-    return CustomFutureBuilder(
-        // Assigning LinearProgressIndicator.
-        whileProcessing: LinearProgressIndicator(),
-        // Fetching Data from searchMovies()
-        future: TMDBMovies.searchMovies(keyword: keyword),
-        // Defining Behaviour or Layout of the Results to the be render when snapShot has data.
-        whenHasData: (data) {
-          // Returing Result and displaying in the Row.
-          return PosterRowGenerator(
-              // Passing Data to Object parameter.
-              object: data,
-              // Providing the length of items in row.
-              itemCount: data.length,
-              // Passing the Poster Widget as a function of type widget, which provides the index from
-              // PosterRowGenerator.
-              poster: (iterator) {
-                return Poster(
-                    // Rendering Poster for each movie in the data.
-                    posterPath: data[iterator].posterPath,
-                    // Providing navigation for the each movie in data list.
-                    navigateTo: MovieDetailsViewer(object: data[iterator]));
-              });
-        });
-  } // movieSearchResultViewer() close.
-
-  /// Function named as 'tvShowSearchResultViewer' returns the results obtained
-  /// by searching keyword passed inside this function. Returns:
-  /// [CustomFuturebuilder] that returns results in a row.
-  /// Parameters: [keyword] is of type string required to enable search on.
-  Widget tvShowSearchResultViewer({required String keyword}) {
-    // Returing CustomFutureBuilder.
-    return CustomFutureBuilder(
-        // Assigning searchTvShows future List of tvshows provider function.
-        future: TMDBTvShows.searchTVShows(keyword: keyword),
-        // Passing LinearProcessIndicator.
-        whileProcessing: LinearProgressIndicator(),
-        // Structuring results into row when snapshot has data.
-        whenHasData: (data) {
-          return PosterRowGenerator(
-              // Passing SnapShot Data in the PosterRowGenerator.
-              object: data,
-              // Setting Item length.
-              itemCount: data.length,
-              // Passing index in the poster function to return each poster from data.
-              poster: (iterator) {
-                // Returning poster.
-                return Poster(
-                    // Displaying poster.
-                    posterPath: data[iterator].posterPath,
-                    navigateTo: Container());
-              });
-        });
-  } // tvShowSearchResultViewer() close.
-
-  @override // Overriding dispose() method.
-  void dispose() {
-    // disposing class key.
-    super.dispose();
-    // Disposing TextEditingController String.
-    _textEditingController.dispose();
-  }
-} // SearchPanel class close.
+}
