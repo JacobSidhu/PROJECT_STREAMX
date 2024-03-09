@@ -268,6 +268,19 @@ class MovieData {
   }
 } // MovieData close.
 
+/// This class provides the DataStructure for to contain information about the
+/// currenlty playing movies in the theatres. It usage the MovieData class to
+/// get the list of MovieData. It has a default constructor that initialize the class
+/// members.
+class TheatreData {
+  // Class members.
+  final Map<String, dynamic>? dates;
+  final List<MovieData>? movies;
+
+  // Defining Class constructor to initialize variables.
+  TheatreData({this.dates, this.movies});
+} // TheatreData close.
+
 /// This class all encapsulates all api services relates to the movies
 /// from the TMDB. It has all static function member in it.
 class TMDBMovies {
@@ -402,10 +415,34 @@ class TMDBMovies {
   }
 
   // Function defined to fetch currently playing movies in the theatres.
-  static Future<List<MovieData>?> currentlyInTheatres() async {
-    // Api url to request lsit of movies currently in theatre.
+  static Future<TheatreData?> currentlyInTheatres() async {
+    // Api url to request list of movies currently in theater.
     String apiUrl = "https://api.themoviedb.org/3/movie/now_playing";
-    return await TMDBAPIManager.getMovies(url: apiUrl);
+    final response = await TMDBAPIManager.makeRequest(url: apiUrl);
+    // Checking for response status.
+    if (response.statusCode == TMDBAPIManager.kSuccessCode) {
+      // If successfully made request and received response.
+      final Map<String, dynamic>? dates = jsonDecode(response.body)["dates"];
+      final List<dynamic>? moviesData = jsonDecode(response.body)["results"];
+      TheatreData? data;
+      // Checking if there is not dates provided.
+      if (dates != null && dates.isNotEmpty) {
+        // Assigning Dates to the dates parameter in TheatreData Constructor.
+        data = TheatreData(dates: dates);
+      }
+      // Checking if movie list is null.
+      if (moviesData != null && moviesData.isNotEmpty) {
+        // Passsing movie list if moviesdata is found and not empty.
+        data = TheatreData(
+            movies:
+                moviesData.map((value) => MovieData.fromJson(value)).toList());
+      }
+      return data;
+    } else {
+      // If response from the http was failed, throwing exception.
+      print("Exception thrown in the currentlyInTheatres function");
+      throw Exception(http.Response(response.body, response.statusCode));
+    }
   }
 } // TMDBMovies close.
 
