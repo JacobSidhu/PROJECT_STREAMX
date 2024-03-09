@@ -396,3 +396,52 @@ class TMDBMovies {
     }
   }
 } // TMDBMovies close.
+
+/// This class contains the api functions to retrieve various TV shows related
+/// Information. Class named 'TMDBTvShows' has all its members as static. class do not
+/// have any private field or member of the class.
+class TMDBTvShows {
+  /// This function fetches the top rated shows from TMDB server.
+  /// Returns: [List<TVshows?>] that contains the list of TVShows.
+  /// Parameters: none.
+  static Future<List<TVShow>?> topRated() async {
+    // Api url to fetch top rated shows.
+    const String apiUrl = "https://api.themoviedb.org/3/tv/top_rated";
+    // Returing list of TV Shows.
+    return TMDBAPIManager.getShows(url: apiUrl);
+  }
+
+  static Future<List<TVShow>?> discover() async {
+    // Base Api url link
+    const String apiUrls =
+        "https://api.themoviedb.org/3/discover/tv?api_key=${AuthAPIKeys.kTMDBApiKey}";
+    return await TMDBAPIManager.getShows(url: apiUrls);
+  }
+
+  /// This Function search for Tv shows from TMDB.
+  static Future<List<TVShow>?> searchTVShows({required String keyword}) async {
+    // BaseLine url for to search TV shows.
+    String baseUrl =
+        "https://api.themoviedb.org/3/search/tv?query=$keyword&api_key=${AuthAPIKeys.kTMDBApiKey}";
+    return await TMDBAPIManager.getShows(url: baseUrl);
+  }
+
+  /// trending () funtion was defined to fetch trending tv shows
+  /// from the TMDB. It is a static function of type Future<List<TVshow>>
+  /// Returns: getShows() function. Paramters: [time] requires the time period.
+  static Future<List<TVShow>?> trending({String? time = "day"}) async {
+    // Api url for trending shows.
+    String apiUrl = "https://api.themoviedb.org/3/trending/tv/$time";
+    return await TMDBAPIManager.getShows(url: apiUrl);
+  }
+
+  /// This function retrieves the popular tv shows. using Api request to
+  /// tmdb. This function uses the getShows function from TMDB manager class.
+  /// Returns: [TMDBManager.getShows()] which returns TV show list.
+  /// Parameters: none.
+  static Future<List<TVShow>?> popular() async {
+    // Api url  for to fetch popular tv shows.
+    String apiUrl = "https://api.themoviedb.org/3/tv/popular";
+    return await TMDBAPIManager.getShows(url: apiUrl);
+  }
+}
