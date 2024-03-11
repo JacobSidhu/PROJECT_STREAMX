@@ -44,6 +44,7 @@ dependencies:
   google_fonts: ^6.1.0 # This provides the google fonts.
   http: ^1.2.0 # Required for to make internet rquests.
   provider:
+  shared_preferences: ^2.2.2
 
 dev_dependencies:
   flutter_test:
