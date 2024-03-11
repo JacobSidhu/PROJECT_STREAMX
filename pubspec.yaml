@@ -43,6 +43,7 @@ dependencies:
   google_nav_bar: ^5.0.6 # For Google nav bar.
   google_fonts: ^6.1.0 # This provides the google fonts.
   http: ^1.2.0 # Required for to make internet rquests.
+  provider:
 
 dev_dependencies:
   flutter_test:
