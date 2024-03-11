@@ -16,7 +16,9 @@
 /// Outline Color:
 /// - colors use for oultining the UI components. like textfeild or outlined button etc.
 ///
-import 'package:flutter/material.dart'; //
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// This utility class is defined to encapsulate themes and colors of the application.
 /// AppTheme class contains the static members for definining light and dark mode used
@@ -186,4 +188,46 @@ class ExtraColors {
     required this.surfaceContainerHigh,
     required this.surfaceContainerHighest,
   });
+}
+
+/// Class ThemeProvider extends to ChangeNotifier.
+/// It is responsible for to theme theme according to the user.
+/// preference. It also provide the listener.
+class ThemeProvider extends ChangeNotifier {
+  ThemeData _themeData = AppTheme.darkMode;
+  // Defining the theme Getter.
+  ThemeData get themeData => _themeData;
+  // Defining the theme setter.
+  set themeData(ThemeData themeData) {
+    _themeData = themeData;
+    notifyListeners();
+  }
+
+  // It defined to apply user preferences.
+  Future<void> applyUserTheme() async {
+    // Creating SharePreferences instance.
+    SharedPreferences userSettings = await SharedPreferences.getInstance();
+    // Changing theme based on the user preference.
+    if (userSettings.getBool("isDark") == null) {
+      _themeData = AppTheme.darkMode;
+      print("theme setting were null");
+    } else {
+      print("Theme setting were not null");
+      _themeData = userSettings.getBool("isDark")!
+          ? AppTheme.darkMode
+          : AppTheme.lightMode;
+    }
+  }
+
+  // toggleTheme function swtich the theme from drak to light and vice versa.
+  Future<void> toggleTheme() async {
+    SharedPreferences userSettings = await SharedPreferences.getInstance();
+    if (_themeData == AppTheme.lightMode) {
+      themeData = AppTheme.darkMode;
+      userSettings.setBool("isDark", false);
+    } else {
+      themeData = AppTheme.lightMode;
+      userSettings.setBool("isDark", true);
+    }
+  }
 }
