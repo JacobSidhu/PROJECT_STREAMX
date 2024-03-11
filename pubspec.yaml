@@ -34,16 +34,16 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
-  animate_do: ^3.3.3
-  firebase_core: ^2.25.4
-  firebase_auth: ^4.17.4
-  google_nav_bar: ^5.0.6
-  http: ^1.2.0
-  firebase_storage: ^11.6.6
-  google_fonts: ^6.1.0
-
-
+  cupertino_icons: ^1.0.2 
+  carousel_slider: ^4.2.1 # Dependency for carousel slider.
+  animate_do: ^3.3.3 # For animation effects.
+  firebase_core: ^2.25.4 # For the firebase core functionalies.
+  firebase_auth: ^4.17.4 # For firebase authentication.
+  firebase_storage: ^11.6.6 # For Firebase cloud storage.
+  google_nav_bar: ^5.0.6 # For Google nav bar.
+  google_fonts: ^6.1.0 # This provides the google fonts.
+  http: ^1.2.0 # Required for to make internet rquests.
+  sensors_plus: ^4.0.2
 
 dev_dependencies:
   flutter_test:
@@ -74,6 +74,10 @@ flutter:
   assets:
     - assets/images/Logo.png
     - assets/images/sherlockHolmes.jpg
+    - assets/images/unavailablePoster.jpg
+    - assets/images/simpson.jpg
+    - assets/images/MoneyHeist.jpg
+    - assets/images/TvShow.jpg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 
