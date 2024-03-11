@@ -9,6 +9,7 @@
 /// Important essential packages required for the design.
 import 'package:animate_do/animate_do.dart'; // Importing Animation package path.
 import 'package:flutter/material.dart'; // Material design package.
+import 'package:streamx/main.dart';
 import 'package:streamx/utils/theme.dart'; // Importing utilities.
 
 /// This statefulWidget class 'SearchPanel' is responsible for rendering an interface
@@ -79,7 +80,7 @@ class SearchPanelState extends State<SearchPanel> {
                 // TextFeild container border radius.
                 borderRadius: BorderRadius.circular(28),
                 // Setting color to the textfeild container.
-                color: AppTheme.isDarkThemeMode
+                color: StreamXState.isdarkTheme
                     ? AppTheme.extraColorsDark.surfaceContainerHigh
                     : AppTheme.extraColorsLight.surfaceContainerHigh,
               ),
