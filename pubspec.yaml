@@ -43,7 +43,6 @@ dependencies:
   google_nav_bar: ^5.0.6 # For Google nav bar.
   google_fonts: ^6.1.0 # This provides the google fonts.
   http: ^1.2.0 # Required for to make internet rquests.
-  sensors_plus: ^4.0.2
 
 dev_dependencies:
   flutter_test:
@@ -78,6 +77,9 @@ flutter:
     - assets/images/simpson.jpg
     - assets/images/MoneyHeist.jpg
     - assets/images/TvShow.jpg
+    - assets/images/peopleThumnail1.jpg
+    - assets/images/peopleThumnail2.jpg
+    - assets/images/peopleThumnail3.jpg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 
