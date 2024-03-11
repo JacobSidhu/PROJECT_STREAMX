@@ -80,6 +80,8 @@ flutter:
     - assets/images/peopleThumnail1.jpg
     - assets/images/peopleThumnail2.jpg
     - assets/images/peopleThumnail3.jpg
+    - assets/images/posterThumnail1.jpg
+    - assets/images/posterThumnail2.jpg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 
