@@ -1,21 +1,10 @@
-/// const_colors.dart
-/// - This file contains the constant colors used for the application UI development.
+/// theme.dart
 ///
-/// Primary Color:
-/// - These colors are for the most prominent components across the UI.
+/// This file was created to store the application theme data
+/// it was various class used to build application theme. It contains color scheme
+/// texttheme and theme provider notifier.
 ///
-/// Secondary Colors:
-/// - These are used for the less prominent components in the UI.
-///
-/// Error Color:
-/// - Are to display error messages.
-///
-/// Surface Color:
-/// - For More neutral backgrounds and containers like sheets, dialogs or cards.
-///
-/// Outline Color:
-/// - colors use for oultining the UI components. like textfeild or outlined button etc.
-///
+/// Importing important packages used in this file.
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -141,6 +130,86 @@ class AppTheme {
           scrim: Color(0xff000000),
           inverseSurface: Color(0xffe0e3e8),
           inversePrimary: Color(0xff28638a)));
+
+  /// This static member of the class contains the textstyle data.
+  /// It returns the ThemeData class that contains textTheme.
+  static ThemeData textTheme({required BuildContext context}) {
+    // List of Different font sizes.
+    const double kTitleLargeSize = 22;
+    const double kTitleMediumSize = 16;
+    const double kTitleSmallSize = 14;
+    const double kBodyLargeSize = 16;
+    const double kBodyMediumSize = 14;
+    const double kBodySmallSize = 12;
+    const double klabellargeSize = 14;
+    const double klabelMediumSize = 12;
+    const double klabelSmallSize = 11;
+    const double kDisplayLargeSize = 32;
+    const double kDisplayMediumSize = 28;
+    const double kDisplaySmallSize = 24;
+    // Returing ThemeData with textTheme properties.
+    return ThemeData(
+        textTheme: TextTheme(
+            bodyLarge: TextStyle(
+                color: Theme.of(context).colorScheme.onSurface,
+                fontFamily: GoogleFonts.roboto.toString(),
+                fontSize: kBodyLargeSize),
+            bodyMedium: TextStyle(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                fontFamily: GoogleFonts.roboto.toString(),
+                fontSize: kBodyMediumSize),
+            bodySmall: TextStyle(
+              color: Theme.of(context).colorScheme.onBackground,
+              fontSize: kBodySmallSize,
+              fontWeight: FontWeight.w400,
+              fontFamily: GoogleFonts.roboto.toString(),
+            ),
+            displayLarge: TextStyle(
+                color: Theme.of(context).colorScheme.onSurface,
+                fontFamily: GoogleFonts.roboto.toString(),
+                fontSize: kDisplayLargeSize,
+                fontWeight: FontWeight.w400),
+            displayMedium: TextStyle(
+                color: Theme.of(context).colorScheme.onSurface,
+                fontFamily: GoogleFonts.roboto.toString(),
+                fontSize: kDisplayMediumSize,
+                fontWeight: FontWeight.w400),
+            displaySmall: TextStyle(
+                color: Theme.of(context).colorScheme.onSurface,
+                fontFamily: GoogleFonts.roboto.toString(),
+                fontSize: kDisplaySmallSize,
+                fontWeight: FontWeight.w400),
+            labelLarge: TextStyle(
+                color: Theme.of(context).colorScheme.onSurface,
+                fontFamily: GoogleFonts.roboto.toString(),
+                fontWeight: FontWeight.w500,
+                fontSize: klabellargeSize),
+            labelMedium: TextStyle(
+                color: Theme.of(context).colorScheme.onPrimary,
+                fontFamily: GoogleFonts.roboto.toString(),
+                fontSize: klabelMediumSize,
+                fontWeight: FontWeight.w500),
+            labelSmall: TextStyle(
+                color: Theme.of(context).colorScheme.onPrimary,
+                fontFamily: GoogleFonts.roboto.toString(),
+                fontSize: klabelSmallSize,
+                fontWeight: FontWeight.w500),
+            titleSmall: TextStyle(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                fontFamily: GoogleFonts.roboto.toString(),
+                fontSize: kTitleSmallSize,
+                fontWeight: FontWeight.w500),
+            titleLarge: TextStyle(
+                color: Theme.of(context).colorScheme.onSurface,
+                fontFamily: GoogleFonts.roboto.toString(),
+                fontSize: kTitleLargeSize,
+                fontWeight: FontWeight.w400),
+            titleMedium: TextStyle(
+                fontFamily: GoogleFonts.roboto.toString(),
+                fontSize: kTitleMediumSize,
+                fontWeight: FontWeight.w500,
+                color: Theme.of(context).colorScheme.onSurface)));
+  }
 }
 
 // This class contains the extra colors used within the application.
