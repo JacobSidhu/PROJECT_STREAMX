@@ -10,7 +10,9 @@
 import 'package:animate_do/animate_do.dart'; // Importing Animation package path.
 import 'package:flutter/material.dart'; // Material design package.
 import 'package:provider/provider.dart';
-import 'package:streamx/main.dart';
+import 'package:streamx/pages/movie_details.dart';
+import 'package:streamx/utils/api/api_service.dart';
+import 'package:streamx/utils/custom_widgets.dart';
 import 'package:streamx/utils/theme.dart'; // Importing utilities.
 
 /// This statefulWidget class 'SearchPanel' is responsible for rendering an interface
@@ -164,5 +166,90 @@ class SearchPanelState extends State<SearchPanel> {
       // Setting app bar float behaviour to true.
       floating: true,
     );
+  }
+
+  /// This function returns the upcoming movies. It was definied here to provide
+  /// preRendered default row in the result panel to facilite user with the upComing
+  /// content. Returns: [SliverToBoxAdaptor] that adapts the row of upcoming movies.
+  /// Parameters: none.
+  SliverToBoxAdapter upComingMoviesRow() {
+    return SliverToBoxAdapter(
+        child: CustomFutureBuilder(
+            future: TMDBMovies.upcomingMovies(),
+            whenHasData: (data) {
+              return PosterRowGenerator(
+                  itemCount: data.length,
+                  poster: (index) {
+                    return Poster(
+                        posterPath: data[index].posterPath,
+                        navigateTo: MovieDetailsViewer(object: data[index]));
+                  });
+            }));
+  } // upComingMovieRow() close.
+
+  /// movieSearchResultViewer function was defined to render result from
+  /// movies api using keyword privided inside the textfield.
+  /// This function requires the keyword to return results accordingly.
+  /// Retunrs: [CustomFutureViewer] that returns resuls based on data recieved from
+  /// api request made.
+  /// Parameters: [keyword] is of type string required to enable search on.
+  Widget movieSearchResultViewer({required String keyword}) {
+    // Returning CustomFutureBuilder.
+    return CustomFutureBuilder(
+        // Assigning LinearProgressIndicator.
+        whileProcessing: LinearProgressIndicator(),
+        // Fetching Data from searchMovies()
+        future: TMDBMovies.searchMovies(keyword: keyword),
+        // Defining Behaviour or Layout of the Results to the be render when snapShot has data.
+        whenHasData: (data) {
+          // Returing Result and displaying in the Row.
+          return PosterRowGenerator(
+              // Providing the length of items in row.
+              itemCount: data.length,
+              // Passing the Poster Widget as a function of type widget, which provides the index from
+              // PosterRowGenerator.
+              poster: (iterator) {
+                return Poster(
+                    // Rendering Poster for each movie in the data.
+                    posterPath: data[iterator].posterPath,
+                    // Providing navigation for the each movie in data list.
+                    navigateTo: MovieDetailsViewer(object: data[iterator]));
+              });
+        });
+  } // movieSearchResultViewer() close.
+
+  /// Function named as 'tvShowSearchResultViewer' returns the results obtained
+  /// by searching keyword passed inside this function. Returns:
+  /// [CustomFuturebuilder] that returns results in a row.
+  /// Parameters: [keyword] is of type string required to enable search on.
+  Widget tvShowSearchResultViewer({required String keyword}) {
+    // Returing CustomFutureBuilder.
+    return CustomFutureBuilder(
+        // Assigning searchTvShows future List of tvshows provider function.
+        future: TMDBTvShows.searchTVShows(keyword: keyword),
+        // Passing LinearProcessIndicator.
+        whileProcessing: LinearProgressIndicator(),
+        // Structuring results into row when snapshot has data.
+        whenHasData: (data) {
+          return PosterRowGenerator(
+              // Setting Item length.
+              itemCount: data.length,
+              // Passing index in the poster function to return each poster from data.
+              poster: (iterator) {
+                // Returning poster.
+                return Poster(
+                    // Displaying poster.
+                    posterPath: data[iterator].posterPath,
+                    navigateTo: Container());
+              });
+        });
+  } // tvShowSearchResultViewer() close.
+
+  @override // Overriding dispose() method.
+  void dispose() {
+    // disposing class key.
+    super.dispose();
+    // Disposing TextEditingController String.
+    _textEditingController.dispose();
   }
 }
