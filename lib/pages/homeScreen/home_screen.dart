@@ -270,7 +270,6 @@ class HomeScreenState extends State<HomeScreen> {
                       vertical: kDrawerChildContainerPadding),
                   child: Custom.divider(
                       color: Theme.of(context).colorScheme.outline)),
-
               SizedBox(
                 height: listItemContainerheight,
                 width: double.infinity,
@@ -301,7 +300,6 @@ class HomeScreenState extends State<HomeScreen> {
                       ],
                     )),
               ),
-
               SizedBox(
                 height: listItemContainerheight,
                 width: double.infinity,
@@ -430,23 +428,6 @@ class HomeScreenState extends State<HomeScreen> {
                       ],
                     )),
               ),
-
-              // GNav(
-              //     activeColor:
-              //         Theme.of(context).colorScheme.secondaryContainer,
-              //     tabs: [
-              //       GButton(
-              //         iconActiveColor:
-              //             Theme.of(context).colorScheme.onSecondaryContainer,
-              //         iconColor:
-              //             Theme.of(context).colorScheme.onSurfaceVariant,
-              //         icon: Icons.list,
-              //         text: 'My WatchList',
-              //         textStyle: AppTheme.textTheme(context: context)
-              //             .textTheme
-              //             .labelLarge,
-              //       )
-              //     ])
             ]),
           )
         ]);
