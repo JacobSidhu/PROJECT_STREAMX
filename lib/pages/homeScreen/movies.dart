@@ -29,6 +29,64 @@ class MoviePageState extends State<MoviePage> {
   @override // Overriding build function.
   Widget build(BuildContext context) {
     // Returning scaffold Widget.
-    return Scaffold();
+    return Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.background,
+        body: listOfPosterRowsLists());
+  }
+
+  /// This function renders the list of poster row based on all categories.
+  /// Returns [CustomFutureBuilder] that returns the list of poster rows if snapshot has got data.
+  /// Parameters: none.
+  Widget listOfPosterRowsLists() {
+    // Error message to display when data not found.
+    const String kErrorOnListEmpty = "No data Found";
+
+    // building future context.
+    return CustomFutureBuilder(
+        future: genreList, // Future genre list.
+        whenHasNull: Container(
+          color: Theme.of(context)
+              .colorScheme
+              .surface, // Error message container color.
+          child: Text(TMDBAPIManager.kDataNotFound,
+              // Styling message.
+              style: AppTheme.textTheme.displaySmall),
+        ),
+        onDataEmpty:
+            Text(kErrorOnListEmpty, style: AppTheme.textTheme.displaySmall),
+        whenHasData: (genreListData) {
+          // Returing list of poster rows.
+          return Expanded(
+            child: ListView.builder(
+                physics: BouncingScrollPhysics(),
+                // Numbers of list to build.
+                itemCount: genreListData.length,
+                itemBuilder: (context, index) {
+                  // Building Poster Rows.
+                  return CustomFutureBuilder(
+                      // Returing movie list by genre id.
+                      future: TMDBMovies.moviesByGenreId(
+                          genreID: genreListData[index].id),
+                      // If Genre List would not for specific categories, then returning
+                      // empty.
+                      onDataEmpty: Container(),
+                      whenHasNull: Container(),
+                      // When snapshot has got data.
+                      whenHasData: (movieData) {
+                        // Generating poster row.
+                        return PosterRowGenerator(
+                            title: genreListData[index].name,
+                            itemCount: genreListData.length,
+                            poster: (index) {
+                              // Returing custom poster in the list.
+                              return Poster(
+                                  posterPath: movieData[index].posterPath,
+                                  navigateTo: MovieDetailsViewer(
+                                      object: movieData[index]));
+                            });
+                      });
+                }),
+          );
+        });
   }
 }
