@@ -4,8 +4,6 @@
 /// urls.
 
 class AuthAPIKeys {
-  // This api key is the authentication key for the TVmaze.com.
-  static const String kTVmazeApiKey = 'h7BfZ5caWyGBkUIcGRp9UA6QNRP0Y4Ae';
   // Api key to authenticate requests for the The Movie DataBase(TMDB).
   static const String kTMDBApiKey = 'ea5cebc5fadcac78b47a940645746f94';
 }
