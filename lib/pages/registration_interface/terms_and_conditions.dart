@@ -58,8 +58,6 @@ class Policies extends StatelessWidget {
         topLeft: Radius.circular(40), topRight: Radius.circular(40));
     // Const padding to the document text.
     const EdgeInsets kContainerPadding = EdgeInsets.all(20);
-    // const document color.
-    const Color kContainerColor = Colors.black;
     // Sample terms and conditions policies.
     const String kDocument =
         "By accessing Stream X application, you agree to our Terms and Privacy Policy. Our platform offers movie and TV show recommendations based on your preferences, and you agree to use it lawfully. Account creation may be required for certain features, and you are by your own responsible for maintaining your account's confidentiality. Any content you share on our platform may be used by us for the analysis to provide better experience. Our content and materials are protected by intellectual property laws. We're not liable for third-party links or the uninterrupted function of our services. You indemnify us for any claims arising from your use of our services. We reserve the right to modify these Terms, and disputes will be resolved under the laws of lancashire. For inquiries, contact us at jacobsidhu.study@gmail.com.";
@@ -79,7 +77,7 @@ class Policies extends StatelessWidget {
                 // Decorating Container.
                 decoration: BoxDecoration(
                     // Container background Color.
-                    color: kContainerColor,
+                    color: Theme.of(context).colorScheme.surfaceVariant,
                     // Setting container border properties.
                     borderRadius: kContainerBorderShape),
                 // Encapsulating Document string within animation string.
@@ -90,7 +88,9 @@ class Policies extends StatelessWidget {
                     child: Text(kDocument,
                         textAlign: TextAlign.left, // Setting TextAlign.
                         // Styling text.
-                        style: AppTheme.textTheme.bodyMedium),
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.onSurface,
+                            fontSize: AppTheme.textTheme.bodyMedium!.fontSize)),
                   ),
                 ))));
   }
