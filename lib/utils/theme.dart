@@ -6,7 +6,9 @@
 ///
 /// Importing important packages used in this file.
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// This utility class is defined to encapsulate themes and colors of the application.
@@ -15,6 +17,20 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// the dark mode is disabled or enabled. and also [isSystemThemeMode] to determine the system current theme
 /// is disabled or enabled.
 class AppTheme {
+  // List of Different font sizes.
+  static const double kTitleLargeSize = 22;
+  static const double kTitleMediumSize = 16;
+  static const double kTitleSmallSize = 14;
+  static const double kBodyLargeSize = 16;
+  static const double kBodyMediumSize = 14;
+  static const double kBodySmallSize = 12;
+  static const double klabellargeSize = 14;
+  static const double klabelMediumSize = 12;
+  static const double klabelSmallSize = 11;
+  static const double kDisplayLargeSize = 32;
+  static const double kDisplayMediumSize = 28;
+  static const double kDisplaySmallSize = 24;
+
   static final ThemeData lightMode = ThemeData(
       colorScheme: ColorScheme(
           brightness: Brightness.light,
@@ -133,83 +149,51 @@ class AppTheme {
 
   /// This static member of the class contains the textstyle data.
   /// It returns the ThemeData class that contains textTheme.
-  static ThemeData textTheme({required BuildContext context}) {
-    // List of Different font sizes.
-    const double kTitleLargeSize = 22;
-    const double kTitleMediumSize = 16;
-    const double kTitleSmallSize = 14;
-    const double kBodyLargeSize = 16;
-    const double kBodyMediumSize = 14;
-    const double kBodySmallSize = 12;
-    const double klabellargeSize = 14;
-    const double klabelMediumSize = 12;
-    const double klabelSmallSize = 11;
-    const double kDisplayLargeSize = 32;
-    const double kDisplayMediumSize = 28;
-    const double kDisplaySmallSize = 24;
-    // Returing ThemeData with textTheme properties.
-    return ThemeData(
-        textTheme: TextTheme(
-            bodyLarge: TextStyle(
-                color: Theme.of(context).colorScheme.onSurface,
-                fontFamily: GoogleFonts.roboto.toString(),
-                fontSize: kBodyLargeSize),
-            bodyMedium: TextStyle(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-                fontFamily: GoogleFonts.roboto.toString(),
-                fontSize: kBodyMediumSize),
-            bodySmall: TextStyle(
-              color: Theme.of(context).colorScheme.onBackground,
-              fontSize: kBodySmallSize,
-              fontWeight: FontWeight.w400,
-              fontFamily: GoogleFonts.roboto.toString(),
-            ),
-            displayLarge: TextStyle(
-                color: Theme.of(context).colorScheme.onSurface,
-                fontFamily: GoogleFonts.roboto.toString(),
-                fontSize: kDisplayLargeSize,
-                fontWeight: FontWeight.w400),
-            displayMedium: TextStyle(
-                color: Theme.of(context).colorScheme.onSurface,
-                fontFamily: GoogleFonts.roboto.toString(),
-                fontSize: kDisplayMediumSize,
-                fontWeight: FontWeight.w400),
-            displaySmall: TextStyle(
-                color: Theme.of(context).colorScheme.onSurface,
-                fontFamily: GoogleFonts.roboto.toString(),
-                fontSize: kDisplaySmallSize,
-                fontWeight: FontWeight.w400),
-            labelLarge: TextStyle(
-                color: Theme.of(context).colorScheme.onSurface,
-                fontFamily: GoogleFonts.roboto.toString(),
-                fontWeight: FontWeight.w500,
-                fontSize: klabellargeSize),
-            labelMedium: TextStyle(
-                color: Theme.of(context).colorScheme.onPrimary,
-                fontFamily: GoogleFonts.roboto.toString(),
-                fontSize: klabelMediumSize,
-                fontWeight: FontWeight.w500),
-            labelSmall: TextStyle(
-                color: Theme.of(context).colorScheme.onPrimary,
-                fontFamily: GoogleFonts.roboto.toString(),
-                fontSize: klabelSmallSize,
-                fontWeight: FontWeight.w500),
-            titleSmall: TextStyle(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-                fontFamily: GoogleFonts.roboto.toString(),
-                fontSize: kTitleSmallSize,
-                fontWeight: FontWeight.w500),
-            titleLarge: TextStyle(
-                color: Theme.of(context).colorScheme.onSurface,
-                fontFamily: GoogleFonts.roboto.toString(),
-                fontSize: kTitleLargeSize,
-                fontWeight: FontWeight.w400),
-            titleMedium: TextStyle(
-                fontFamily: GoogleFonts.roboto.toString(),
-                fontSize: kTitleMediumSize,
-                fontWeight: FontWeight.w500,
-                color: Theme.of(context).colorScheme.onSurface)));
-  }
+
+  static TextTheme textTheme = TextTheme(
+      bodyLarge: TextStyle(
+          fontFamily: GoogleFonts.roboto.toString(), fontSize: kBodyLargeSize),
+      bodyMedium: TextStyle(
+          fontFamily: GoogleFonts.roboto.toString(), fontSize: kBodyMediumSize),
+      bodySmall: TextStyle(
+          fontSize: kBodySmallSize,
+          fontWeight: FontWeight.w400,
+          fontFamily: GoogleFonts.roboto.toString()),
+      displayLarge: TextStyle(
+          fontFamily: GoogleFonts.roboto.toString(),
+          fontSize: kDisplayLargeSize,
+          fontWeight: FontWeight.w400),
+      displayMedium: TextStyle(
+          fontFamily: GoogleFonts.roboto.toString(),
+          fontSize: kDisplayMediumSize,
+          fontWeight: FontWeight.w400),
+      displaySmall:
+          TextStyle(fontSize: kDisplaySmallSize, fontWeight: FontWeight.w400),
+      labelLarge: TextStyle(
+          fontFamily: GoogleFonts.roboto.toString(),
+          fontWeight: FontWeight.w500,
+          fontSize: klabellargeSize),
+      labelMedium: TextStyle(
+          fontFamily: GoogleFonts.roboto.toString(),
+          fontSize: klabelMediumSize,
+          fontWeight: FontWeight.w500),
+      labelSmall: TextStyle(
+          fontFamily: GoogleFonts.roboto.toString(),
+          fontSize: klabelSmallSize,
+          fontWeight: FontWeight.w500),
+      titleSmall: TextStyle(
+          fontFamily: GoogleFonts.roboto.toString(),
+          fontSize: kTitleSmallSize,
+          fontWeight: FontWeight.w500),
+      titleLarge: TextStyle(
+          fontFamily: GoogleFonts.roboto.toString(),
+          fontSize: kTitleLargeSize,
+          fontWeight: FontWeight.w400),
+      titleMedium: TextStyle(
+        fontFamily: GoogleFonts.roboto.toString(),
+        fontSize: kTitleMediumSize,
+        fontWeight: FontWeight.w500,
+      ));
 }
 
 // This class contains the extra colors used within the application.
@@ -265,7 +249,7 @@ class ExtraColors {
 class ThemeProvider extends ChangeNotifier {
   ThemeData _themeData = AppTheme.darkMode;
   // Defining the theme Getter.
-  ThemeData get themeData => _themeData;
+  ThemeData get getThemeData => _themeData;
   // Defining the theme setter.
   set themeData(ThemeData themeData) {
     _themeData = themeData;
@@ -277,14 +261,12 @@ class ThemeProvider extends ChangeNotifier {
     // Creating SharePreferences instance.
     SharedPreferences userSettings = await SharedPreferences.getInstance();
     // Changing theme based on the user preference.
-    if (userSettings.getBool("isDark") == null) {
-      _themeData = AppTheme.darkMode;
-      print("theme setting were null");
+    if (userSettings.getBool("isDark") == false) {
+      themeData = AppTheme.lightMode;
+    } else if (userSettings.getBool("isDark") == true) {
+      themeData = AppTheme.darkMode;
     } else {
-      print("Theme setting were not null");
-      _themeData = userSettings.getBool("isDark")!
-          ? AppTheme.darkMode
-          : AppTheme.lightMode;
+      themeData = AppTheme.darkMode;
     }
   }
 
