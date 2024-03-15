@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "784981661937",
+    "project_id": "streamx-f8f2d",
+    "storage_bucket": "streamx-f8f2d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:784981661937:android:47ff5c3c76b04c7273b150",
+        "android_client_info": {
+          "package_name": "com.example.myflutter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBcEQ64VfV8DOvRvZ0_y_9XRSraLipXpJM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:784981661937:android:83deb91ed61d8c5773b150",
+        "android_client_info": {
+          "package_name": "com.example.streamx"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBcEQ64VfV8DOvRvZ0_y_9XRSraLipXpJM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
