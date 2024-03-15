@@ -209,14 +209,20 @@ class HomePageState extends State<HomePage> {
     const int kActionGenreIDs = 28;
     const int kSciFiGenreIDs = 878;
     const int kHorrorGenreIDs = 27;
+    const String kRowTitle1 = "Best in action";
+    const String kRowTitle2 = "Just For Sci Fi Lovers";
+    const String kRowTitle3 = "Unlock your fear";
+
     return SliverToBoxAdapter(
         child: Column(
       children: [
+        // Defining CustomFutureBuilder.
         CustomFutureBuilder(
             future: TMDBMovies.moviesByGenreId(genreID: kActionGenreIDs),
             whenHasData: (data) {
+              // Returing PosterRowGenerator.
               return PosterRowGenerator(
-                  title: "Best In Action",
+                  title: kRowTitle1,
                   itemCount: data.length,
                   poster: (index) {
                     return Poster(
@@ -224,11 +230,12 @@ class HomePageState extends State<HomePage> {
                         navigateTo: MovieDetailsViewer(object: data[index]));
                   });
             }),
+        // Future builder for Second row.
         CustomFutureBuilder(
             future: TMDBMovies.moviesByGenreId(genreID: kSciFiGenreIDs),
             whenHasData: (data) {
               return PosterRowGenerator(
-                  title: "Just For Sci Lovers",
+                  title: kRowTitle2,
                   itemCount: data.length,
                   poster: (index) {
                     return Poster(
@@ -236,11 +243,12 @@ class HomePageState extends State<HomePage> {
                         navigateTo: MovieDetailsViewer(object: data[index]));
                   });
             }),
+        // Future builder for third row.
         CustomFutureBuilder(
             future: TMDBMovies.moviesByGenreId(genreID: kHorrorGenreIDs),
             whenHasData: (data) {
               return PosterRowGenerator(
-                  title: "Unlock Your Fear",
+                  title: kRowTitle3,
                   itemCount: data.length,
                   poster: (index) {
                     return Poster(
@@ -310,10 +318,17 @@ class HomePageState extends State<HomePage> {
   SliverToBoxAdapter myListPrompt() {
     const String kButtonLabel = "Open Now";
     const String kContainerHeading = "My List";
-    const EdgeInsets kHeadingBottomMargin = EdgeInsets.only(bottom: 60);
     const EdgeInsets kContainerPadding = EdgeInsets.all(10);
     const double kContainerHeight = 400;
+    const Alignment kMiddleContainerAlignment = Alignment(0, -0.6);
+    const Alignment kFirstContainerAlignment = Alignment(0, 0.2);
+    const Alignment kLastContainerAlignment = Alignment(0, -1.0);
+    const Size kFirstContainer = Size(340, 180);
+    const Size kMiddleContainer = Size(300, 180);
+    const Size kLastContainer = Size(260, 180);
+
     // Returing Layout.
+
     return SliverToBoxAdapter(
         child: Container(
             padding: kContainerPadding,
@@ -330,7 +345,7 @@ class HomePageState extends State<HomePage> {
                   width: double.infinity,
                   child: Stack(children: [
                     Align(
-                      alignment: Alignment(0, -1.0),
+                      alignment: kLastContainerAlignment,
                       child: Transform.rotate(
                         angle: 0,
                         child: Container(
@@ -343,13 +358,13 @@ class HomePageState extends State<HomePage> {
                                 fit: BoxFit.cover),
                             borderRadius: BorderRadius.all(Radius.circular(10)),
                           ),
-                          width: 260,
-                          height: 180,
+                          width: kLastContainer.width,
+                          height: kLastContainer.height,
                         ),
                       ),
                     ),
                     Align(
-                      alignment: Alignment(0, -0.6),
+                      alignment: kMiddleContainerAlignment,
                       child: Transform.rotate(
                         angle: 0,
                         child: Container(
@@ -362,13 +377,13 @@ class HomePageState extends State<HomePage> {
                             borderRadius: BorderRadius.all(Radius.circular(10)),
                             color: Colors.red,
                           ),
-                          width: 300,
-                          height: 180,
+                          width: kMiddleContainer.width,
+                          height: kMiddleContainer.height,
                         ),
                       ),
                     ),
                     Align(
-                      alignment: Alignment(0, 0.2),
+                      alignment: kFirstContainerAlignment,
                       child: Container(
                         decoration: BoxDecoration(
                           border: Border.all(
@@ -379,8 +394,8 @@ class HomePageState extends State<HomePage> {
                           borderRadius: BorderRadius.all(Radius.circular(10)),
                           color: Color.fromARGB(255, 0, 77, 244),
                         ),
-                        width: 340,
-                        height: 180,
+                        width: kFirstContainer.width,
+                        height: kFirstContainer.height,
                       ),
                     ),
                   ]),
