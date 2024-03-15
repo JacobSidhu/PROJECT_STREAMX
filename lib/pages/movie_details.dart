@@ -9,7 +9,7 @@
 import 'package:animate_do/animate_do.dart'; // Importing 'animate_do' dependency.
 import 'package:flutter/material.dart'; // Importing 'Material' package.
 import 'package:streamx/utils/api/api_service.dart'; // Importing 'api' file.
-import 'package:streamx/utils/const_methods.dart'; // Importing utitlies needed.
+import 'package:streamx/utils/custom_widgets.dart'; // Importing utitlies needed.
 import 'package:streamx/utils/theme.dart'; // Importing theme of the application.
 
 /// MovieDetailsViewer class was defined to design the UI components
@@ -186,9 +186,7 @@ class MovieDetailsViewerState extends State<MovieDetailsViewer> {
                       widget.object.title, // Title string.
                       textAlign: TextAlign.left, // Title text alignment.
                       // Title text Textstyle.
-                      style: AppTheme.textTheme(context: context)
-                          .textTheme
-                          .titleLarge,
+                      style: AppTheme.textTheme.titleLarge,
                     ),
                   ),
                 ),
@@ -201,9 +199,7 @@ class MovieDetailsViewerState extends State<MovieDetailsViewer> {
                 child: Text(
                     'Release: ${widget.object.releaseData} | ${widget.object.isAdult ? "18+" : "12+"}',
                     // Styling the text.
-                    style: AppTheme.textTheme(context: context)
-                        .textTheme
-                        .bodySmall),
+                    style: AppTheme.textTheme.bodySmall),
               ),
               // Encapsulating duration and genre of the poster within the container.
               Container(
@@ -212,9 +208,7 @@ class MovieDetailsViewerState extends State<MovieDetailsViewer> {
                 // Displaying text.
                 child: Text('Duration: 01:22.0 | Action, Adventure, Drama',
                     // Styling Text Starting.
-                    style: AppTheme.textTheme(context: context)
-                        .textTheme
-                        .bodySmall),
+                    style: AppTheme.textTheme.bodySmall),
               )
             ],
           )),
@@ -353,7 +347,7 @@ class MovieDetailsViewerState extends State<MovieDetailsViewer> {
     // Returing CustomfutureBuilder Widget Class.
     return CustomFutureBuilder(
       // Assigning similarMovies provider api to Future.
-      future: TMDBMovies.similarMovies(movieId: widget.object.id),
+      future: TMDBMovies.moviesByGenreId(genreID: widget.object.genre[0]),
       // Designing the context snapshot succesfully has data.
       whenHasData: (data) {
         // Returning GridViewBuilder.
@@ -377,7 +371,7 @@ class MovieDetailsViewerState extends State<MovieDetailsViewer> {
           whenHasData: (data) {
             return GridView.builder(
                 // Disabling manual scroll behaviour.
-                physics: NeverScrollableScrollPhysics(),
+
                 // Defining the Item number and spacing between the grid items.
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     childAspectRatio: kChildAspectRatio,
@@ -407,17 +401,15 @@ class MovieDetailsViewerState extends State<MovieDetailsViewer> {
       return Center(
           child: Text("No Information Available",
               // Styling the TextString.
-              style: AppTheme.textTheme(context: context)
-                  .textTheme
-                  .displayMedium));
+              style: AppTheme.textTheme.displayMedium));
     } else {
       // if overview is not empty then returning the overview within the
       // padding widget.
       return Padding(
           padding: kpadding,
-          child: Text(widget.object.overview,
+          child: SelectableText(widget.object.overview,
               // Styling string.
-              style: AppTheme.textTheme(context: context).textTheme.bodySmall));
+              style: AppTheme.textTheme.bodySmall));
     }
   }
 
@@ -437,33 +429,35 @@ class MovieDetailsViewerState extends State<MovieDetailsViewer> {
           // Then Returing Custom processIndicator.
           return Custom.processIndicator(context: context);
         } // Checking Response was null.
-        else if (snapshot.data!.buy == null && snapshot.data!.rent == null) {
+
+        else if (snapshot.data == null) {
           print(
               "watchProvider SnapShot was null in movieProvidersPage function");
           // Returns suitable feedback when there is'nt any data.
           return Center(
             child: Text(
-              "No Data Available!",
+              TMDBAPIManager.kDataNotFound,
               textAlign: TextAlign.center,
               // Styling feedback string.
-              style:
-                  AppTheme.textTheme(context: context).textTheme.displayMedium,
+              style: AppTheme.textTheme.displaySmall,
             ),
           );
         }
         // Checking when snapshot has data.
         else if (snapshot.hasData) {
+          WatchProviders data = snapshot.data!;
           print("has got data in movieProvidersPage function");
           // Assigning data to the WatchProviders datatype.
-          final WatchProviders providers = snapshot.data!;
           // Constant Values and labels.
           const double kRowPadding = 10; // Padding for rent row Container.
-          const double kRowHeight = 82; // Padding for rent row Container.
-          const Size kSizeOfLogo = Size(60, 60); // Logo container dimensions.
-          const double kLogoBorderRadius = 8.0;
-          const String kRentRowLabel = "Rent"; // Rent providers row label.
-          const String kBuyRowLabel = "Buy"; // To Buy providers row label.
-          const EdgeInsets kRowLabelContainerPadding = EdgeInsets.all(20);
+          const double kRowHeight = 220; // Padding for rent row Container.
+          const Size kSizeOfLogo = Size(120, 120); // Logo container dimensions.
+          const double kLogoBorderRadius = 24.0;
+          const String kRentRowLabel =
+              "Available to Rent: "; // Rent providers row label.
+          const String kBuyRowLabel =
+              "Available to Buy:"; // To Buy providers row label.
+          const EdgeInsets kRowLabelContainerPadding = EdgeInsets.all(10);
           // Retunring the Column of Rows of movies on rent and movie to buy provider's
           // information.
           return Column(
@@ -472,12 +466,14 @@ class MovieDetailsViewerState extends State<MovieDetailsViewer> {
               // Returing Row based on movie is availble for.
               children: [
                 // If movie is avaiable to rent on specific platforms.
-                if (snapshot.data!.rent != null) ...[
+                if (data.rent != null) ...[
                   // Returing Sized row of movie to rent providers info.
                   SizedBox(
                       height: kRowHeight, // Setting row height.
                       // Displaying Movies providers logo and name in column layout.
                       child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           // Displaying the Row Label within the constant
                           // padding.
@@ -486,49 +482,50 @@ class MovieDetailsViewerState extends State<MovieDetailsViewer> {
                               child: Text(
                                 kRentRowLabel, // Label String.
                                 // Styling the Label of the Row.
-                                style: AppTheme.textTheme(context: context)
-                                    .textTheme
-                                    .labelLarge,
+                                style: AppTheme.textTheme.titleMedium,
                               )),
                           // Listing the information in a row using ListView builder.
-                          ListView.builder(
-                              // Setting item count based on numbers of providers.
-                              itemCount: providers.rent!.length,
-                              // Defining the scroll direction.
-                              scrollDirection: Axis.horizontal,
-                              // Building context.
-                              itemBuilder: (context, index) {
-                                // Returing the list of Movies providers logo
-                                // and their corresponding names.
-                                return Container(
-                                    // Setting Logo and label container margin.
-                                    margin: EdgeInsets.symmetric(
-                                        horizontal: kRowPadding),
-                                    child: Column(children: [
-                                      // Returing logo Container
-                                      Container(
-                                        // Provider's logo dimensions.
-                                        height: kSizeOfLogo.height,
-                                        width: kSizeOfLogo.width,
-                                        // Decoration provider's logo container.
-                                        decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(
-                                                kLogoBorderRadius),
-                                            // Fetching Network Image.
-                                            image: DecorationImage(
-                                                image: NetworkImage(providers
-                                                    .rent![index].logoPath),
-                                                fit: BoxFit.cover)),
-                                      ),
-                                      // Creating or displaying label underneath the logo.
-                                      Text(providers.rent![index].providerName,
-                                          // styling the Label text.
-                                          style: AppTheme.textTheme(
-                                                  context: context)
-                                              .textTheme
-                                              .labelLarge)
-                                    ]));
-                              }),
+                          Expanded(
+                            child: ListView.builder(
+                                // Setting item count based on numbers of providers.
+                                itemCount: data.rent!.length,
+                                // Defining the scroll direction.
+                                scrollDirection: Axis.horizontal,
+                                // Building context.
+                                itemBuilder: (context, index) {
+                                  // Returing the list of Movies providers logo
+                                  // and their corresponding names.
+                                  return Container(
+                                      // Setting Logo and label container margin.
+                                      margin: EdgeInsets.symmetric(
+                                          horizontal: kRowPadding),
+                                      child: Column(children: [
+                                        // Returing logo Container
+                                        Container(
+                                          // Provider's logo dimensions.
+                                          height: kSizeOfLogo.height,
+                                          width: kSizeOfLogo.width,
+                                          // Decoration provider's logo container.
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      kLogoBorderRadius),
+                                              // Fetching Network Image.
+                                              image: DecorationImage(
+                                                  filterQuality:
+                                                      FilterQuality.high,
+                                                  image: NetworkImage(data
+                                                      .rent![index].logoPath),
+                                                  fit: BoxFit.cover)),
+                                        ),
+                                        // Creating or displaying label underneath the logo.
+                                        Text(data.rent![index].providerName,
+                                            // styling the Label text.
+                                            style:
+                                                AppTheme.textTheme.titleMedium)
+                                      ]));
+                                }),
+                          ),
                         ],
                       ))
                 ] else ...[
@@ -541,71 +538,71 @@ class MovieDetailsViewerState extends State<MovieDetailsViewer> {
                         // Displaying Api Reponse message.
                         textAlign: TextAlign.center,
                         // Styling Information string.
-                        style: AppTheme.textTheme(context: context)
-                            .textTheme
-                            .labelLarge,
+                        style: AppTheme.textTheme.labelLarge,
                       ))
                 ],
                 // Also checking if the Movie is avaible for to rent.
-                if (snapshot.data!.buy != null) ...[
+                if (data.rent != null) ...[
                   SizedBox(
                       // Defining the height of the Row.
                       height: kRowHeight,
-                      child: Column(children: [
-                        // Creating the label of the row.
-                        Padding(
-                            // Setting padding to the row label.
-                            padding: kRowLabelContainerPadding,
-                            // Displaying Text using Text() widget.
-                            child: Text(
-                              kBuyRowLabel, // 'Buy' label String.
-                              // Styling the Label String..
-                              style: AppTheme.textTheme(context: context)
-                                  .textTheme
-                                  .labelLarge,
-                            )),
-                        // Building the list of the movie provider to buy.
-                        ListView.builder(
-                            // Assinging the number of the movie providers.
-                            itemCount: providers.buy!.length,
-                            // defining the scroll direction.
-                            scrollDirection: Axis.horizontal,
-                            itemBuilder: (context, index) {
-                              // Building and returns the context.
-                              return Container(
-                                  // Buy provider's list container margin.
-                                  margin: EdgeInsets.symmetric(
-                                      horizontal: kRowPadding),
-                                  // defining a column to layout the logo and its
-                                  // label underneath.
-                                  child: Column(children: [
-                                    // Logo container.
-                                    Container(
-                                      // Configuring the logo dimensions
-                                      height: kSizeOfLogo.height,
-                                      width: kSizeOfLogo.width,
-                                      // Decorating the Logo .
-                                      decoration: BoxDecoration(
-                                          // Setting logo border radius.
-                                          borderRadius: BorderRadius.circular(
-                                              kLogoBorderRadius),
-                                          // Decorating logo image.
-                                          image: DecorationImage(
-                                              // Fetching logo though network image class.
-                                              image: NetworkImage(providers
-                                                  .buy![index].logoPath),
-                                              fit: BoxFit.cover)),
-                                    ),
-                                    // Displaying the row of the labels under the movie providers.
-                                    Text(providers.buy![index].providerName,
-                                        // styling the label.
-                                        style:
-                                            AppTheme.textTheme(context: context)
-                                                .textTheme
-                                                .labelLarge)
-                                  ]));
-                            })
-                      ]))
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Creating the label of the row.
+                            Padding(
+                                // Setting padding to the row label.
+                                padding: kRowLabelContainerPadding,
+                                // Displaying Text using Text() widget.
+                                child: Text(
+                                  kBuyRowLabel, // 'Buy' label String.
+                                  // Styling the Label String..
+                                  style: AppTheme.textTheme.titleMedium,
+                                )),
+                            // // Building the list of the movie provider to buy.
+                            Expanded(
+                              child: ListView.builder(
+                                  // Assinging the number of the movie providers.
+                                  itemCount: data.buy!.length,
+                                  // defining the scroll direction.
+                                  scrollDirection: Axis.horizontal,
+                                  itemBuilder: (context, index) {
+                                    // Building and returns the context.
+                                    return Container(
+                                        // Buy provider's list container margin.
+                                        margin: EdgeInsets.symmetric(
+                                            horizontal: kRowPadding),
+                                        // defining a column to layout the logo and its
+                                        // label underneath.
+                                        child: Column(children: [
+                                          // Logo container.
+                                          Container(
+                                            // Configuring the logo dimensions
+                                            height: kSizeOfLogo.height,
+                                            width: kSizeOfLogo.width,
+                                            // Decorating the Logo .
+                                            decoration: BoxDecoration(
+                                                // Setting logo border radius.
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        kLogoBorderRadius),
+                                                // Decorating logo image.
+                                                image: DecorationImage(
+                                                    // Fetching logo though network image class.
+                                                    image: NetworkImage(data
+                                                        .buy![index].logoPath),
+                                                    fit: BoxFit.cover)),
+                                          ),
+                                          // Displaying the row of the labels under the movie providers.
+                                          Text(data.buy![index].providerName,
+                                              // styling the label.
+                                              style: AppTheme
+                                                  .textTheme.titleMedium)
+                                        ]));
+                                  }),
+                            )
+                          ]))
                 ]
                 // Movie is not available to buy.
                 else ...[
@@ -616,9 +613,7 @@ class MovieDetailsViewerState extends State<MovieDetailsViewer> {
                       child: Text(
                         "Not Available To Buy",
                         // Styling Message.
-                        style: AppTheme.textTheme(context: context)
-                            .textTheme
-                            .labelLarge,
+                        style: AppTheme.textTheme.labelLarge,
                       ))
                 ]
               ]);
@@ -632,8 +627,7 @@ class MovieDetailsViewerState extends State<MovieDetailsViewer> {
             child: Text(
               "Something Went Wrong!",
               // Styling error message.
-              style:
-                  AppTheme.textTheme(context: context).textTheme.displayLarge,
+              style: AppTheme.textTheme.displayLarge,
             ),
           );
         }
@@ -641,7 +635,7 @@ class MovieDetailsViewerState extends State<MovieDetailsViewer> {
     );
   }
 
-  // Overriding the dispose function.
+// Overriding the dispose function.
   @override
   void dispose() {
     super.dispose();
