@@ -566,7 +566,7 @@ class CustomFutureBuilder<T> extends StatelessWidget {
                         // Aligning text.
                         textAlign: TextAlign.center,
                         // Styling Text.
-                        style: AppTheme.textTheme.displayLarge));
+                        style: AppTheme.textTheme.displaySmall));
           } // Checking if data fetched is empty.
           else if (snapshot.data!.isEmpty) {
             // onDataEmpty widget is null and then defining custom behaviour.
