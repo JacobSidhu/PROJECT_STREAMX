@@ -53,6 +53,17 @@ class SearchPanelState extends State<SearchPanel> {
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             slivers: [
               sliverAppBar(), // Renders search textField.
+              upComingMoviesRow(),
+              SliverToBoxAdapter(
+                  child: isEmptyField
+                      ? null
+                      : movieSearchResultViewer(
+                          keyword: _textEditingController.text)),
+              SliverToBoxAdapter(
+                  child: isEmptyField
+                      ? null
+                      : tvShowSearchResultViewer(
+                          keyword: _textEditingController.text))
             ]));
   }
 
@@ -83,7 +94,7 @@ class SearchPanelState extends State<SearchPanel> {
                 // TextFeild container border radius.
                 borderRadius: BorderRadius.circular(28),
                 // Setting color to the textfeild container.
-                color: Provider.of<ThemeProvider>(context).themeData ==
+                color: Provider.of<ThemeProvider>(context).getThemeData ==
                         AppTheme.darkMode
                     ? AppTheme.extraColorsDark.surfaceContainerHigh
                     : AppTheme.extraColorsLight.surfaceContainerHigh,
@@ -152,9 +163,7 @@ class SearchPanelState extends State<SearchPanel> {
                       // Displaying Textfield hint text.
                       hintText: 'Search here...',
                       // styling hintTextStyle.
-                      hintStyle: AppTheme.textTheme(context: context)
-                          .textTheme
-                          .bodyLarge,
+                      hintStyle: AppTheme.textTheme.bodyLarge,
                       // Setting default Border to none.
                       border: InputBorder.none),
                 ),
@@ -173,11 +182,14 @@ class SearchPanelState extends State<SearchPanel> {
   /// content. Returns: [SliverToBoxAdaptor] that adapts the row of upcoming movies.
   /// Parameters: none.
   SliverToBoxAdapter upComingMoviesRow() {
+    const kRowTitle = "UpComing Movies";
     return SliverToBoxAdapter(
         child: CustomFutureBuilder(
             future: TMDBMovies.upcomingMovies(),
+            whileProcessing: LinearProgressIndicator(),
             whenHasData: (data) {
               return PosterRowGenerator(
+                  title: kRowTitle,
                   itemCount: data.length,
                   poster: (index) {
                     return Poster(
@@ -194,6 +206,7 @@ class SearchPanelState extends State<SearchPanel> {
   /// api request made.
   /// Parameters: [keyword] is of type string required to enable search on.
   Widget movieSearchResultViewer({required String keyword}) {
+    const kRowTitle = "Movies Results";
     // Returning CustomFutureBuilder.
     return CustomFutureBuilder(
         // Assigning LinearProgressIndicator.
@@ -201,9 +214,12 @@ class SearchPanelState extends State<SearchPanel> {
         // Fetching Data from searchMovies()
         future: TMDBMovies.searchMovies(keyword: keyword),
         // Defining Behaviour or Layout of the Results to the be render when snapShot has data.
+        onDataEmpty: Container(),
+        whenHasNull: Container(),
         whenHasData: (data) {
           // Returing Result and displaying in the Row.
           return PosterRowGenerator(
+              title: kRowTitle,
               // Providing the length of items in row.
               itemCount: data.length,
               // Passing the Poster Widget as a function of type widget, which provides the index from
@@ -223,6 +239,7 @@ class SearchPanelState extends State<SearchPanel> {
   /// [CustomFuturebuilder] that returns results in a row.
   /// Parameters: [keyword] is of type string required to enable search on.
   Widget tvShowSearchResultViewer({required String keyword}) {
+    const kRowTitle = "TV shows Results";
     // Returing CustomFutureBuilder.
     return CustomFutureBuilder(
         // Assigning searchTvShows future List of tvshows provider function.
@@ -230,8 +247,11 @@ class SearchPanelState extends State<SearchPanel> {
         // Passing LinearProcessIndicator.
         whileProcessing: LinearProgressIndicator(),
         // Structuring results into row when snapshot has data.
+        onDataEmpty: Container(),
+        whenHasNull: Container(),
         whenHasData: (data) {
           return PosterRowGenerator(
+              title: kRowTitle,
               // Setting Item length.
               itemCount: data.length,
               // Passing index in the poster function to return each poster from data.
