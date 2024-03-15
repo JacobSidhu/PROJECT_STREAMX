@@ -6,9 +6,7 @@
 ///
 /// Importing important packages used in this file.
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// This utility class is defined to encapsulate themes and colors of the application.
