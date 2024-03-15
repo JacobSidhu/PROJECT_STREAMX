@@ -316,6 +316,7 @@ class HomePageState extends State<HomePage> {
   /// it is a suggestion and way to navigate to the my list.
   /// Return [SliverToBoxAdaptor] that adapts the layout.
   SliverToBoxAdapter myListPrompt() {
+    // List of important constants
     const String kButtonLabel = "Open Now";
     const String kContainerHeading = "My List";
     const EdgeInsets kContainerPadding = EdgeInsets.all(10);
@@ -326,9 +327,8 @@ class HomePageState extends State<HomePage> {
     const Size kFirstContainer = Size(340, 180);
     const Size kMiddleContainer = Size(300, 180);
     const Size kLastContainer = Size(260, 180);
-
+    const double kContainersBorderRadius = 10;
     // Returing Layout.
-
     return SliverToBoxAdapter(
         child: Container(
             padding: kContainerPadding,
@@ -352,11 +352,11 @@ class HomePageState extends State<HomePage> {
                           decoration: BoxDecoration(
                             border: Border.all(
                                 color: Theme.of(context).colorScheme.outline),
-                            color: Color.fromARGB(255, 2, 235, 56),
                             image: DecorationImage(
                                 image: AssetImage(LocalImages.kSimpson),
                                 fit: BoxFit.cover),
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            borderRadius: BorderRadius.all(
+                                Radius.circular(kContainersBorderRadius)),
                           ),
                           width: kLastContainer.width,
                           height: kLastContainer.height,
@@ -374,8 +374,8 @@ class HomePageState extends State<HomePage> {
                             image: DecorationImage(
                                 image: AssetImage(LocalImages.kposterThumnail1),
                                 fit: BoxFit.cover),
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            color: Colors.red,
+                            borderRadius: BorderRadius.all(
+                                Radius.circular(kContainersBorderRadius)),
                           ),
                           width: kMiddleContainer.width,
                           height: kMiddleContainer.height,
@@ -391,8 +391,8 @@ class HomePageState extends State<HomePage> {
                           image: DecorationImage(
                               image: AssetImage(LocalImages.kposterThumnail2),
                               fit: BoxFit.cover),
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          color: Color.fromARGB(255, 0, 77, 244),
+                          borderRadius: BorderRadius.all(
+                              Radius.circular(kContainersBorderRadius)),
                         ),
                         width: kFirstContainer.width,
                         height: kFirstContainer.height,
@@ -418,6 +418,9 @@ class HomePageState extends State<HomePage> {
     const EdgeInsets kContainerMargin = EdgeInsets.all(10);
     const Size kThumbnailSize = Size(200, 120);
     const double kThumnailContainerBorderRadius = 10;
+    const Alignment kMiddleContainerAlignment = Alignment(-0.6, -0.4);
+    const Alignment kFirstContainerAlignment = Alignment(0, 0.3);
+    const Alignment kLastContainerAlignment = Alignment(0.6, -0.4);
     return SliverToBoxAdapter(
         child: Container(
       margin: kContainerMargin,
@@ -435,7 +438,7 @@ class HomePageState extends State<HomePage> {
               width: double.infinity,
               child: Stack(children: [
                 Align(
-                  alignment: Alignment(0.6, -0.4),
+                  alignment: kLastContainerAlignment,
                   child: Transform.rotate(
                     angle: 0.1,
                     child: Container(
@@ -454,7 +457,7 @@ class HomePageState extends State<HomePage> {
                   ),
                 ),
                 Align(
-                  alignment: Alignment(-0.6, -0.4),
+                  alignment: kMiddleContainerAlignment,
                   child: Transform.rotate(
                     angle: -0.1,
                     child: Container(
@@ -473,7 +476,7 @@ class HomePageState extends State<HomePage> {
                   ),
                 ),
                 Align(
-                  alignment: Alignment(0, 0.3),
+                  alignment: kFirstContainerAlignment,
                   child: Container(
                     decoration: BoxDecoration(
                       border: Border.all(
