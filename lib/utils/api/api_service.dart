@@ -9,7 +9,6 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert'; // Importing dart convert json to convert data.
 import 'package:streamx/utils/api/auth_apikeys.dart';
-import 'package:streamx/utils/const_values.dart';
 
 /// The Class 'TMDBAPIManager' was defined to manage and organize the
 /// comman components related to the TMDB APIs. It contains the common error
@@ -30,12 +29,10 @@ class TMDBAPIManager {
   /// It returns the List of movieData.
   /// Parameters: none.
   static Future<List<MovieData>?> getMovies({required String url}) async {
-    print("from getmovie function");
     // To capturing the response returned from makeRequest function.
     final response = await makeRequest(url: url);
     // Checking response.
     if (response.statusCode == kSuccessCode) {
-      print("true response");
       // If response was the success
       // Returning list of movies by accessing "results" from response body.
       final List<dynamic>? moviesList = jsonDecode(response.body)['results'];
@@ -47,8 +44,6 @@ class TMDBAPIManager {
       return null;
     } else {
       // Throwing exceptions if response was unsuccessful.
-      print("Response was false in getMovie Methods");
-      print(http.Response(response.body, response.statusCode));
       throw Exception(http.Response(response.body, response.statusCode));
     }
   }
@@ -61,25 +56,18 @@ class TMDBAPIManager {
   static Future<List<TVShow>?> getShows({required String url}) async {
     // To capturing the response returned from makeRequest function.
     final response = await makeRequest(url: url);
-    print("After response in getshow function logFrom: getshows ");
-    print(response.statusCode);
     // Checking response
     if (response.statusCode == kSuccessCode) {
-      print("After succes response from http request logFrom: Getshows");
       // If response was the success then returning list of required movies from response body.
       final List<dynamic>? tvShowsList = jsonDecode(response.body)["results"];
       // Checking for null response.
       if (tvShowsList != null && tvShowsList.isNotEmpty) {
-        print("results were not null from getshows");
         // Returning the list of object MovieFrame class.
         return tvShowsList.map((data) => TVShow.fromJson(data)).toList();
       }
-      print("results in the getshows function was null or has no value");
       return null; // Returing null if response was null.
     } else {
       // Throwing Exception if http request returned fail.
-      print("Response was false in getMovie Methods");
-      print(http.Response(response.body, response.statusCode));
       throw Exception(http.Response(response.body, response.statusCode));
     }
   }
@@ -304,10 +292,8 @@ class TMDBMovies {
             genres.map((data) => Genre.fromJson(data)).toList();
         return genreList;
       }
-      print("Genre was null ! from genre function");
       return null;
     } else {
-      print("Exception thrown from genre function from http response");
       // Throwing exceptions if response was unsuccessful.
       throw http.Response(response.body, response.statusCode);
     }
@@ -319,14 +305,11 @@ class TMDBMovies {
   /// It returns the List of popular movie or categories.
   /// Parameters:
   /// [keyword] - required to serach for related content.
-  static Future<List<MovieData>?> searchMovies({
-    required String keyword,
-  }) async {
-    const String kMovieSearchBaselineUrl =
-        'https://api.themoviedb.org/3/search/movie?query=';
+  static Future<List<MovieData>?> searchMovies(
+      {required String keyword, String? page = "1"}) async {
     // Appending search API url.
     String urlLink =
-        '$kMovieSearchBaselineUrl$keyword&api_key=${AuthAPIKeys.kTMDBApiKey}';
+        '${TMDBMovieAPIs.kMovieSearchBaselineUrl}$keyword&$page&api_key=${AuthAPIKeys.kTMDBApiKey}';
     final http.Response response = await http.get(Uri.parse(urlLink));
     // Checking response
     if (response.statusCode == TMDBAPIManager.kSuccessCode) {
@@ -336,11 +319,10 @@ class TMDBMovies {
         // Returning the list of object MovieFrame class.
         return moviesList.map((data) => MovieData.fromJson(data)).toList();
       }
-      print("results was null from searchMovie function");
+
       // Returning the null if there isnt any result from search Movie function.
       return null;
     } else {
-      print("Expection thrown from searchMovies with no http response");
       // Throwing exceptions if response was unsuccessful.
       throw http.Response(response.body, response.statusCode);
     }
@@ -352,7 +334,6 @@ class TMDBMovies {
   /// Parameters:
   /// [movieId] - required to serach for related content.
   static Future<List<MovieData>?> similarMovies({required int movieId}) async {
-    print("from await function in similarMovies");
     // Appending similar movie request baseline url.
     String requestUrls = 'https://api.themoviedb.org/3/movie/$movieId/similar';
     // Returning list similar movies.
@@ -369,7 +350,6 @@ class TMDBMovies {
     final response = await http.get(Uri.parse(apiUrl));
     // Checking response.
     if (response.statusCode == TMDBAPIManager.kSuccessCode) {
-      print("true response from movieByGenreId");
       // If response was the success
       // Returning list of movies by accessing "results" from response body.
       final List<dynamic>? moviesList = jsonDecode(response.body)['results'];
@@ -381,8 +361,6 @@ class TMDBMovies {
       return null;
     } else {
       // Throwing exceptions if response was unsuccessful.
-      print("Response was false in getMovie Methods");
-      print(http.Response(response.body, response.statusCode));
       throw Exception(http.Response(response.body, response.statusCode));
     }
   }
@@ -422,26 +400,20 @@ class TMDBMovies {
         "https://api.themoviedb.org/3/movie/$movieId/watch/providers";
     final response = await TMDBAPIManager.makeRequest(url: apiUrl);
     if (response.statusCode == TMDBAPIManager.kSuccessCode) {
-      print('success response from api url logform: watchProvider function');
       final Map<String, dynamic>? jsonResponse = json.decode(response.body);
       final Map<String, dynamic>? results = jsonResponse?["results"];
       if (results != null && results.isNotEmpty) {
-        print("results wasnt null in watchProvider function");
         final Map<String, dynamic>? gbData = results["GB"];
         if (gbData != null && gbData.isNotEmpty) {
-          print("results wasnt null in watchProvider function");
           final WatchProviders gbProviders = WatchProviders.fromJson(gbData);
           return gbProviders;
         } else {
-          print("GB was not found in results in watchProvder functions");
           return null;
         }
       } else {
-        print("Results was null in watchprovider function");
         return null;
       }
     } else {
-      print("Expection throwen from watchProvider");
       throw Exception("Failed To receive response from Internet");
     }
   }
@@ -453,36 +425,27 @@ class TMDBMovies {
     final response = await TMDBAPIManager.makeRequest(url: apiUrl);
     // Checking for response status.
     if (response.statusCode == TMDBAPIManager.kSuccessCode) {
-      print("success from response in INTheatre");
       // If successfully made request and received response.
       final Map<String, dynamic>? dates = jsonDecode(response.body)["dates"];
       final List<dynamic>? moviesData = jsonDecode(response.body)["results"];
       TheatreData? data;
       // Checking if dates were null.
       if (dates != null && dates.isNotEmpty) {
-        print("dates were not null");
         // Assigning Dates to the dates parameter in TheatreData Constructor.
         data =
             TheatreData(maxDate: dates["maximum"], minDate: dates["minimum"]);
-      } else {
-        print("dates were null");
-      }
+      } else {}
       // Checking if movie list is null.
       if (moviesData != null && moviesData.isNotEmpty) {
-        print("movies were not null");
         List<MovieData> movieslist =
             moviesData.map((value) => MovieData.fromJson(value)).toList();
         // Passsing movie list if moviesdata is found and not empty.
         data = TheatreData(
             maxDate: data?.maxDate, minDate: data?.minDate, movies: movieslist);
-      } else {
-        print("movies were null");
-      }
-      print("Returned null data from intheatre function");
+      } else {}
       return data;
     } else {
       // If response from the http was failed, throwing exception.
-      print("Exception thrown in the currentlyInTheatres function");
       throw Exception(http.Response(response.body, response.statusCode));
     }
   }
