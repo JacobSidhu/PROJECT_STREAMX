@@ -60,16 +60,17 @@ class TMDBAPIManager {
   /// Parameters: none.
   static Future<List<TVShow>?> getShows({required String url}) async {
     // To capturing the response returned from makeRequest function.
-    final response = await http.get(Uri.parse(url));
+    final response = await makeRequest(url: url);
     print("After response in getshow function logFrom: getshows ");
     print(response.statusCode);
     // Checking response
     if (response.statusCode == kSuccessCode) {
       print("After succes response from http request logFrom: Getshows");
       // If response was the success then returning list of required movies from response body.
-      final List<dynamic>? tvShowsList = jsonDecode(response.body)['results'];
+      final List<dynamic>? tvShowsList = jsonDecode(response.body)["results"];
       // Checking for null response.
       if (tvShowsList != null && tvShowsList.isNotEmpty) {
+        print("results were not null from getshows");
         // Returning the list of object MovieFrame class.
         return tvShowsList.map((data) => TVShow.fromJson(data)).toList();
       }
@@ -257,8 +258,9 @@ class MovieData {
         // Appending the TMDB image loader with the poster.
         posterPath:
             TMDBAPIManager.imageLoaderUrl(imagePath: json["poster_path"]),
-        backDrop:
-            TMDBAPIManager.imageLoaderUrl(imagePath: json["backdrop_path"]),
+        backDrop: json["backdrop_path"] == null
+            ? TMDBAPIManager.imageLoaderUrl(imagePath: json["poster_path"])
+            : TMDBAPIManager.imageLoaderUrl(imagePath: json["backdrop_path"]),
         id: json["id"] ?? 0,
         genre: List<int>.from(json["genre_ids"] ?? []),
         overview: json["overview"] ?? "Information unavailable.",
@@ -317,11 +319,14 @@ class TMDBMovies {
   /// It returns the List of popular movie or categories.
   /// Parameters:
   /// [keyword] - required to serach for related content.
-  static Future<List<MovieData>?> searchMovies(
-      {required String keyword, String? page = "1"}) async {
+  static Future<List<MovieData>?> searchMovies({
+    required String keyword,
+  }) async {
+    const String kMovieSearchBaselineUrl =
+        'https://api.themoviedb.org/3/search/movie?query=';
     // Appending search API url.
     String urlLink =
-        '${TMDBMovieAPIs.kMovieSearchBaselineUrl}$keyword&$page&api_key=${AuthAPIKeys.kTMDBApiKey}';
+        '$kMovieSearchBaselineUrl$keyword&api_key=${AuthAPIKeys.kTMDBApiKey}';
     final http.Response response = await http.get(Uri.parse(urlLink));
     // Checking response
     if (response.statusCode == TMDBAPIManager.kSuccessCode) {
@@ -423,7 +428,7 @@ class TMDBMovies {
       if (results != null && results.isNotEmpty) {
         print("results wasnt null in watchProvider function");
         final Map<String, dynamic>? gbData = results["GB"];
-        if (gbData != null) {
+        if (gbData != null && gbData.isNotEmpty) {
           print("results wasnt null in watchProvider function");
           final WatchProviders gbProviders = WatchProviders.fromJson(gbData);
           return gbProviders;
@@ -490,44 +495,43 @@ class TMDBTvShows {
   /// This function fetches the top rated shows from TMDB server.
   /// Returns: [List<TVshows?>] that contains the list of TVShows.
   /// Parameters: none.
-  static Future<List<TVShow>?> topRated() async {
+  static Future<List<TVShow>?> topRated() {
     // Api url to fetch top rated shows.
     const String apiUrl = "https://api.themoviedb.org/3/tv/top_rated";
     // Returing list of TV Shows.
     return TMDBAPIManager.getShows(url: apiUrl);
   }
 
-  static Future<List<TVShow>?> discover() async {
+  static Future<List<TVShow>?> discover() {
     // Base Api url link
-    const String apiUrls =
-        "https://api.themoviedb.org/3/discover/tv?api_key=${AuthAPIKeys.kTMDBApiKey}";
-    return await TMDBAPIManager.getShows(url: apiUrls);
+    const String apiUrls = "https://api.themoviedb.org/3/discover/tv";
+    return TMDBAPIManager.getShows(url: apiUrls);
   }
 
   /// This Function search for Tv shows from TMDB.
-  static Future<List<TVShow>?> searchTVShows({required String keyword}) async {
+  static Future<List<TVShow>?> searchTVShows({required String keyword}) {
     // BaseLine url for to search TV shows.
     String baseUrl =
         "https://api.themoviedb.org/3/search/tv?query=$keyword&api_key=${AuthAPIKeys.kTMDBApiKey}";
-    return await TMDBAPIManager.getShows(url: baseUrl);
+    return TMDBAPIManager.getShows(url: baseUrl);
   }
 
   /// trending () funtion was defined to fetch trending tv shows
   /// from the TMDB. It is a static function of type Future<List<TVshow>>
   /// Returns: getShows() function. Paramters: [time] requires the time period.
-  static Future<List<TVShow>?> trending({String? time = "day"}) async {
+  static Future<List<TVShow>?> trending({String? time = "day"}) {
     // Api url for trending shows.
     String apiUrl = "https://api.themoviedb.org/3/trending/tv/$time";
-    return await TMDBAPIManager.getShows(url: apiUrl);
+    return TMDBAPIManager.getShows(url: apiUrl);
   }
 
   /// This function retrieves the popular tv shows. using Api request to
   /// tmdb. This function uses the getShows function from TMDB manager class.
   /// Returns: [TMDBManager.getShows()] which returns TV show list.
   /// Parameters: none.
-  static Future<List<TVShow>?> popular() async {
+  static Future<List<TVShow>?> popular() {
     // Api url  for to fetch popular tv shows.
     String apiUrl = "https://api.themoviedb.org/3/tv/popular";
-    return await TMDBAPIManager.getShows(url: apiUrl);
+    return TMDBAPIManager.getShows(url: apiUrl);
   }
 }
