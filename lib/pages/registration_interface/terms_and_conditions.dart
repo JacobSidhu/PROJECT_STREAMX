@@ -34,7 +34,7 @@ class Policies extends StatelessWidget {
       // Displaying Title of the AppBar.
       title: Text(kAppBarTitle,
           // Styling Text.
-          style: AppTheme.textTheme(context: context).textTheme.titleLarge),
+          style: AppTheme.textTheme.titleLarge),
       centerTitle: true, // centering title String.
       leading: IconButton(
           // On press popping the context to get back to the previous screen.
@@ -90,9 +90,7 @@ class Policies extends StatelessWidget {
                     child: Text(kDocument,
                         textAlign: TextAlign.left, // Setting TextAlign.
                         // Styling text.
-                        style: AppTheme.textTheme(context: context)
-                            .textTheme
-                            .bodyMedium),
+                        style: AppTheme.textTheme.bodyMedium),
                   ),
                 ))));
   }
