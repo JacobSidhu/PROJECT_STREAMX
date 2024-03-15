@@ -1,5 +1,10 @@
+///
+/// main.dart
+///
+/// This dart is the main root file of the application that contains the main function
+/// that runs the appliaction.
+///
 /// Importing essesntial packages for the application
-
 import 'package:flutter/material.dart'; // Importing material package.
 import 'package:provider/provider.dart';
 import 'package:streamx/pages/homeScreen/home_screen.dart';
@@ -14,10 +19,6 @@ void main() async {
   // Applying user prefered theme.
   await themeProvider.applyUserTheme();
 
-  /// This 'initializeApp()' of class Firebase ensures the initialization of the
-  /// firebase platform based configurations and services for the application
-  /// before running the application.
-  // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   /// Running the application with changeNotifier.
   runApp(ChangeNotifierProvider(
       create: (context) => themeProvider, child: const StreamX()));
@@ -35,11 +36,13 @@ class StreamX extends StatelessWidget {
   // uilding context using build funtion.
   Widget build(BuildContext context) {
     // Returning MaterialApp class.
-    return MaterialApp(
-        // Invoking RegistrationPage() after successful authentication.
-        home: HomeScreen(),
-        themeAnimationDuration: _themeAnimationDuration,
-        // Setting up dymanic theme for the application.
-        theme: Provider.of<ThemeProvider>(context).themeData);
+    return Consumer<ThemeProvider>(builder: (context, themeProvider, child) {
+      return MaterialApp(
+          // Invoking RegistrationPage() after successful authentication.
+          home: HomeScreen(),
+          themeAnimationDuration: _themeAnimationDuration,
+          // Setting up dymanic theme for the application.
+          theme: themeProvider.getThemeData);
+    });
   }
 }
