@@ -7,7 +7,6 @@
 /// different sections and explore content.
 
 // Essential Importations required for the UI design.
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart'; // Material design package.
 // Carousel slider package to import carousel_slider api class.
 import 'package:carousel_slider/carousel_slider.dart';
