@@ -50,7 +50,7 @@ class TvTabState extends State<TvTab> {
                             poster: (index) {
                               return Poster(
                                   posterPath: data[index].posterPath,
-                                  navigateTo: Container());
+                                  navigateTo: Scaffold(appBar: AppBar()));
                             });
                       });
                 })));

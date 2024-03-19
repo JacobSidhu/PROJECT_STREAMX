@@ -17,6 +17,7 @@ import 'package:streamx/pages/homeScreen/movies.dart';
 import 'package:streamx/pages/homeScreen/search.dart';
 import 'package:streamx/pages/homeScreen/theatre.dart';
 import 'package:streamx/pages/homeScreen/tv.dart';
+import 'package:streamx/pages/registration_interface/terms_and_conditions.dart';
 import 'package:streamx/utils/custom_widgets.dart';
 import 'package:streamx/utils/theme.dart'; // Importing utilities.
 
@@ -376,7 +377,10 @@ class HomeScreenState extends State<HomeScreen> {
                 child: FilledButton(
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.transparent),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => Policies()));
+                    },
                     child: Row(
                       children: [
                         Icon(Icons.policy_rounded,
